@@ -1,0 +1,17 @@
+keep-inventory-percentage: 30
+drop-interval: 120
+compass-radius: 15
+headstart: 30
+drop-lifetime: 180
+team:
+  hunter:
+    prefix: "&4[Hunter]"
+  runner:
+    prefix: "&2[Runner]"
+  spectator:
+    prefix: "&8[Spectator]"
+
+world:
+  default: "world"
+  lobby: "lobby"
+

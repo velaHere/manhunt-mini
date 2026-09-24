@@ -1,0 +1,32 @@
+name: Manhunt
+version: ${project.version}
+main: org.velas.manhunt.Manhunt
+api-version: '1.20'
+author: Dhiren06
+description: A Minecraft Manhunt plugin with team roles and tracking
+depend: [Velaboard]
+
+commands:
+  manhunt:
+    description: All manhunt configuration Commands
+    usage: "Usage: /manhunt <subcommand> <sub-subcommand> <args>"
+    aliases: mh
+
+  crewmsg:
+    description: Send private msg to crew members
+    usage: "Usage: /crewmsg <message> or /cm <message>"
+    aliases: cm
+
+  cords:
+    description: Send your current coordinates to the crew members
+    usage: "Usage: /cords"
+
+  test:
+    description: just a test
+    permission: manhunt.setup
+    usage: "ok"
+
+
+permissions:
+  manhunt.setup:
+    default: op
