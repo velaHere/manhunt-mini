@@ -95,17 +95,12 @@ public abstract class BaseHunterLifecycleHandler extends LifecycleHandler {
     protected void playerRespawn() {
         Player player = this.hunter.getPlayer();
         if(player==null)return;
-        player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
         player.sendMessage(Color.YELLOW + "You can still get this game, don't loose the hopes!");
 
         World world = Bukkit.getWorld(Settings.OVERWORLD_NAME);
         if (world == null) return;
 
         Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
-            Location bedLoc = player.getBedSpawnLocation();
-            Location teleportLoc = (bedLoc != null && bedLoc.getWorld().getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME())) ? bedLoc : world.getSpawnLocation();
-            player.teleport(teleportLoc);
-
             if(this.hunter.getManhuntGame().getGameManager().getDropManager().hasRespawnDropUnlocked()) {
                 long l = System.currentTimeMillis();
                 if ((l - lastRespawnDropMillis) / 1000 > DROP_CAP) {

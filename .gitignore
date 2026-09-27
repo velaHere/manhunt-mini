@@ -1,7 +1,7 @@
 manhunt-normal/
-./build-mini.bat
-./dependency-reduced-pom.xml
-./Manhunt.iml
+build-mini.bat
+dependency-reduced-pom.xml
+Manhunt.iml
 target/
 .idea/
 core/core.iml

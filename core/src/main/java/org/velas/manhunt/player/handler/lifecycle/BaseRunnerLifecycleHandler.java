@@ -123,6 +123,7 @@ public abstract class BaseRunnerLifecycleHandler extends LifecycleHandler {
 
     @Override
     protected void playerRespawn() {
+        // this.giveItems(); -> maybe in future when runners can be revived
         this.playerRespawnEvent();
     }
 

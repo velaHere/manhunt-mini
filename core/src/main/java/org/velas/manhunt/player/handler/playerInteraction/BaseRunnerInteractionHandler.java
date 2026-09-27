@@ -2,8 +2,10 @@ package org.velas.manhunt.player.handler.playerInteraction;
 
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
+import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.player.Runner;
 import org.velas.manhunt.player.handler.PlayerInteractionHandler;
+
 
 public abstract class BaseRunnerInteractionHandler extends PlayerInteractionHandler {
 
@@ -19,7 +21,7 @@ public abstract class BaseRunnerInteractionHandler extends PlayerInteractionHand
         if(!runner.isOnline()) return false;
         if(this.runner.getManhuntGame().isStarting()) {
             event.setCancelled(true);
-            return false;
+            return CustomItemType.isCustomItem(event.getPlayer().getInventory().getItemInMainHand());
         }
         return this.playerInteractionEvent(event);
     }

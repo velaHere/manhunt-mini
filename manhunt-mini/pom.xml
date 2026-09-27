@@ -82,7 +82,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\dsiro\Downloads\Server\1.20.1 - Manhunt\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\dsiro\Documents\Server\1.20.1 - Manhunt\plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>

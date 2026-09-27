@@ -16,15 +16,21 @@ public class HunterWorldInteractionHandler extends BaseHunterWorldInteractionHan
     @Override
     protected void blockPlaceEvent(BlockPlaceEvent event) {
         this.onTransition(event);
+        this.checkAlive(event);
     }
 
     @Override
     protected void blockBreakEvent(BlockBreakEvent event) {
         this.onTransition(event);
+        this.checkAlive(event);
     }
 
     private void onTransition(Cancellable event){
         if(this.hunter.getManhuntGame().getGameState().equals(GameState.TRANSITION))
             event.setCancelled(true);
+    }
+
+    private void checkAlive(Cancellable event) {
+        if(!this.hunter.isAlive()) event.setCancelled(true);
     }
 }

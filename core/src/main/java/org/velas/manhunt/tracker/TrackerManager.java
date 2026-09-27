@@ -116,6 +116,7 @@ public class TrackerManager {
             if (manhuntPlayer == null) continue;
             if (!(manhuntPlayer instanceof Hunter hunter)) continue;
             if(!manhuntPlayer.isOnline()) continue;
+            if(!hunter.isAlive()) continue;
 
             Player player = manhuntPlayer.getPlayer();
             if(player==null) continue;

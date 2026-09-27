@@ -10,6 +10,7 @@ import java.util.List;
 public final class Hunter extends ManhuntPlayer {
 
     private int target;
+    private boolean alive = true;
 
     Hunter(PlayerBuilder builder){
         super(builder);
@@ -36,5 +37,13 @@ public final class Hunter extends ManhuntPlayer {
         if (player!=null)
             player.sendMessage(Color.GREEN + "Tracking target changed. Right-click with the compass to see who it’s pointing to.");
         this.target=validTarget;
+    }
+
+    public void setAlive(boolean status) {
+        this.alive = status;
+    }
+
+    public boolean isAlive() {
+        return this.alive;
     }
 }

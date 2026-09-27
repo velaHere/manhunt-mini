@@ -16,15 +16,21 @@ public class HunterVehicleHandler extends BaseHunterVehicleHandler {
     @Override
     protected void vehicleEnterEvent(VehicleEnterEvent event) {
         this.cancelOnTransition(event);
+        this.checkAlive(event);
     }
 
     @Override
     protected void vehicleDamageEvent(VehicleDamageEvent event) {
         this.cancelOnTransition(event);
+        this.checkAlive(event);
     }
 
     private void cancelOnTransition(Cancellable event){
         if(this.hunter.getManhuntGame().getGameState().equals(GameState.TRANSITION))
             event.setCancelled(true);
+    }
+
+    private void checkAlive(Cancellable event) {
+        if(!this.hunter.isAlive()) event.setCancelled(true);
     }
 }

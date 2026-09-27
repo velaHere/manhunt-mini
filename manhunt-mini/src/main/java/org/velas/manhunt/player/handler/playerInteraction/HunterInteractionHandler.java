@@ -17,6 +17,12 @@ public class HunterInteractionHandler extends BaseHunterInteractionHandler {
             event.setCancelled(true);
             return false;
         }
+
+        if(!this.hunter.isAlive()) {
+            event.setCancelled(true);
+            return false;
+        }
+
         return true;
     }
 }

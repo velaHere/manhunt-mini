@@ -8,6 +8,7 @@ import org.bukkit.util.BoundingBox;
 import org.velas.manhunt.dropSystem.Parachute;
 import org.velas.manhunt.dropSystem.drops.AirDrop;
 import org.velas.manhunt.game.ManhuntGame;
+import org.velas.manhunt.player.Hunter;
 import org.velas.manhunt.player.ManhuntPlayer;
 
 public final class EntityKillerAndLandingDetector {
@@ -57,6 +58,12 @@ public final class EntityKillerAndLandingDetector {
                     if (mp != null && mp.isSpectator()) {
                         player.teleport(game.getGameManager().getWorldManager().getOverworld().getSpawnLocation());
                         continue;
+                    } else if (mp != null && mp.isHunter()) {
+                        Hunter hunter = (Hunter) mp;
+                        if(!hunter.isAlive()) {
+                            player.teleport(game.getGameManager().getWorldManager().getOverworld().getSpawnLocation());
+                            continue;
+                        }
                     }
                 }
                 else if(living instanceof Chicken chicken){

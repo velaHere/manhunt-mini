@@ -115,14 +115,9 @@ public abstract class LifecycleHandler {
     public void onPlayerRespawn(){
         if(!this.manhuntPlayer.isOnline()) return;
         this.playerRespawn();
-        Player player = this.manhuntPlayer.getPlayer();
-        if(player==null)return;
-        this.giveItems(player);
     }
 
-    private void giveItems(@NotNull Player player) {
-
-        if(manhuntPlayer.isSpectator()) return;
+    protected void giveItems(@NotNull Player player) {
 
         Avatar avatar = manhuntPlayer.getAvatar();
         if(avatar==null) return;
