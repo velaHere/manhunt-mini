@@ -20,6 +20,8 @@ import org.velas.manhunt.Color;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
+import org.velas.manhunt.customItems.CustomRecipe;
 import org.velas.manhunt.dropSystem.CargoDragon;
 import org.velas.manhunt.dropSystem.drops.Flare;
 import org.velas.manhunt.game.GameState;
@@ -164,6 +166,11 @@ public final class FlareGun implements CustomItem {
         );
         recipe.setIngredient('G', Material.GOLD_INGOT);
         recipe.setIngredient('R', Material.FIREWORK_ROCKET);
+
+        CustomRecipe.register(CustomItemType.FLARE_GUN, new CustomRecipe("Flare Gun", this)
+                .shape(new String[]{" G ", "GRG", " G "})
+                .setIngredient('G', new ItemStack(Material.GOLD_INGOT))
+                .setIngredient('R', new ItemStack(Material.FIREWORK_ROCKET)));
 
         Bukkit.addRecipe(recipe);
     }

@@ -38,7 +38,10 @@ public abstract class LifecycleHandler {
 
         Player player = manhuntPlayer.getPlayer();
         if(player==null) return;
+        player.getInventory().clear();
+
         this.matchStart();
+
         this.giveItems(player);
     }
 
@@ -83,7 +86,7 @@ public abstract class LifecycleHandler {
 
         if(this.given) return;
 
-        if(currentTime > 60) {
+        if(currentTime > 55) {
             this.giveItems(player);
         }
     }
@@ -142,7 +145,13 @@ public abstract class LifecycleHandler {
             case HEAD_START -> {
                 ManhuntPlayer manhuntPlayer = manhuntGame.getGameManager().getPlayerManager().getManhuntPlayer(player);
                 if(manhuntPlayer==null) return;
-                if(manhuntPlayer.isRunner()) return;
+                if(manhuntPlayer.isRunner()) {
+                    if(player.getWorld().getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME())) {
+                        player.teleport(manhuntGame.getGameManager().getWorldManager()
+                                .getOverworld().getSpawnLocation());
+                    }
+                    return;
+                }
                 player.teleport(manhuntGame.getGameManager().getWorldManager()
                         .getOverworld().getSpawnLocation());
                 if(!(manhuntPlayer.isHunter())) return;
@@ -177,7 +186,7 @@ public abstract class LifecycleHandler {
             case TRANSITION -> {
                 int timeElapsedAfterStrongholdRequest = manhuntGame.getGameManager()
                         .getGameTimeLine().getTimeElapsedAfterStrongholdRequest();
-                if (timeElapsedAfterStrongholdRequest >=50 && timeElapsedAfterStrongholdRequest <=64) {
+                if (timeElapsedAfterStrongholdRequest >=10 && timeElapsedAfterStrongholdRequest <=60) {
                     GameFlowManager.tpPlayerToLobbyForTransition(player);
                     GameFlowManager.playIntenseVoidEffect(player);
                 }else{

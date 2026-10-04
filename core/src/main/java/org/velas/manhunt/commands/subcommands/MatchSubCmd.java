@@ -2,6 +2,7 @@ package org.velas.manhunt.commands.subcommands;
 
 import org.bukkit.entity.Player;
 import org.velas.manhunt.Color;
+import org.velas.manhunt.commands.subcommands.match.MatchStartPreviousCmd;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.commands.CustomSubCommand;
 import org.velas.manhunt.commands.subcommands.match.MatchStartCmd;
@@ -13,6 +14,7 @@ public class MatchSubCmd extends CustomSubCommand {
         super(name, alias, permissionName);
         this.subCommands.add(new MatchStartCmd("start", null, Settings.SETUP_PERMISSION));
         this.subCommands.add(new MatchStopCmd("stop", null, Settings.SETUP_PERMISSION));
+        this.subCommands.add(new MatchStartPreviousCmd("start_previous", null, Settings.SETUP_PERMISSION));
     }
 
     @Override
@@ -28,6 +30,6 @@ public class MatchSubCmd extends CustomSubCommand {
 
     @Override
     public void sendUsage(Player player) {
-        player.sendMessage(Color.AQUA + "Usage: /manhunt match <start/stop> time(in SEC))");
+        player.sendMessage(Color.AQUA + "Usage: /manhunt match <start/stop/start_previous> <time(in SEC)>");
     }
 }

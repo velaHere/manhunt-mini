@@ -45,6 +45,8 @@ public class PlayersList extends PaginatedMenu {
             return;
         }
 
+        event.setCancelled(true);
+
         ItemStack item = event.getCurrentItem();
 
         if(item == null || item.getType().equals(Material.AIR)) return;
@@ -78,7 +80,6 @@ public class PlayersList extends PaginatedMenu {
                 }
 
             }
-            event.setCancelled(true);
             return;
         }
 

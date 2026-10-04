@@ -17,14 +17,26 @@ public class WorldManager {
     private World overworld;
     private World netherWorld;
     private Location stronghold;
+    private final Long seed;
     private @Nullable final Structure village;
 
-    public WorldManager(@Nullable Structure village) {
+    public WorldManager(@Nullable Structure village, @Nullable Long seed) {
         this.village=village;
+        if(seed == null) seed = new Random().nextLong();
+        this.seed = seed;
     }
 
     public World getOverworld(){return this.overworld;}
     public World getNetherWorld(){return this.netherWorld;}
+
+    public long getSeed() {
+        return this.seed;
+    }
+
+    @Nullable
+    public Structure getVillage() {
+        return this.village;
+    }
 
     public void generateManhuntWorlds(){
 
@@ -35,12 +47,10 @@ public class WorldManager {
         String [] worldNames = {worldName, world_netherName, world_the_endName};
 
         for (String worldN: worldNames){
-
             Bukkit.unloadWorld(worldN, false);
         }
 
         for (String worldN: worldNames){
-
             File worldFile = new File(Bukkit.getWorldContainer(), worldN);
             deleteWorldFolder(worldFile);
         }
@@ -49,8 +59,6 @@ public class WorldManager {
     }
 
     private void createWorld(String worldName, String world_netherName, String world_the_endName){
-
-        long seed = new Random().nextLong();
         this.overworld = new WorldCreator(worldName).environment(World.Environment.NORMAL).seed(seed).createWorld();
         this.netherWorld = new WorldCreator(world_netherName).environment(World.Environment.NETHER).seed(seed).createWorld();
         new WorldCreator(world_the_endName).environment(World.Environment.THE_END).seed(seed).createWorld();
@@ -138,8 +146,12 @@ public class WorldManager {
     }
 
     public void preloadAsync(int radius){
+        this.preloadAsync(radius, null);
+    }
 
-        Location spawn = overworld.getSpawnLocation();
+    public void preloadAsync(int radius, Location spawn){
+
+        if(spawn == null) spawn = overworld.getSpawnLocation();
         int centreX=spawn.getBlockX() >> 4;
         int centreZ=spawn.getBlockZ() >> 4;
 

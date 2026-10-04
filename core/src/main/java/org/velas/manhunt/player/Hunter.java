@@ -2,6 +2,7 @@ package org.velas.manhunt.player;
 
 import org.bukkit.entity.Player;
 import org.velas.manhunt.Color;
+import org.velas.manhunt.Utils;
 import org.velas.manhunt.game.ManhuntManager;
 
 import java.util.ArrayList;
@@ -31,8 +32,10 @@ public final class Hunter extends ManhuntPlayer {
 
     private void resetTarget(ManhuntManager gameManager, List<Runner> runners) {
         int validTarget = gameManager.getTrackerManager().getValidTarget(runners.size() - 1);
-        if(validTarget == -1)
-            throw new RuntimeException("Unable to find any valid target for being followed by compass");
+        if(validTarget == -1) {
+            Utils.warning("Unable to find any valid target for being followed by compass");
+            return;
+        }
         Player player = this.getPlayer();
         if (player!=null)
             player.sendMessage(Color.GREEN + "Tracking target changed. Right-click with the compass to see who it’s pointing to.");

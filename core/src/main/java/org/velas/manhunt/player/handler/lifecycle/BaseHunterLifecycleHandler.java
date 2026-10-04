@@ -1,7 +1,5 @@
 package org.velas.manhunt.player.handler.lifecycle;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -10,22 +8,16 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.velas.manhunt.Color;
 import org.velas.manhunt.config.Settings;
-import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItemType;
-import org.velas.manhunt.dropSystem.drops.RespawnDrop;
+import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.player.Hunter;
 import org.velas.manhunt.player.handler.LifecycleHandler;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public abstract class BaseHunterLifecycleHandler extends LifecycleHandler {
 
-    private static final int DROP_CAP = 5*60; // -> seconds
-    private static final int DROP_RADIUS = 10; // -> blocks
-
     protected final @NotNull Hunter hunter;
-    private long lastRespawnDropMillis;
+    protected long lastRespawnDropMillis;
 
     public BaseHunterLifecycleHandler(@NotNull Hunter hunter){
         super(hunter);
@@ -49,23 +41,30 @@ public abstract class BaseHunterLifecycleHandler extends LifecycleHandler {
 
         player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
         ManhuntGame game = this.hunter.getManhuntGame();
+        giveEffects(player, game);
+        player.sendMessage(Color.YELLOW + "You can move after " + game.getHeadStartTime()/20 +  " seconds");
+
+        this.matchStartEvent();
+    }
+
+    private void giveEffects(Player player, ManhuntGame game) {
+
+        int time = game.getHeadStartTimeInSec() - (game.getGameManager().getGameTimeLine().getTime() - 60);
+
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.BLINDNESS,
-                20*game.getHeadStartTimeInSec(),   // duration in ticks (5 seconds)
+                20*time,   // duration in ticks (5 seconds)
                 1,        // amplifier (level)
                 false,    // ambient
                 false     // particles
         ));
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.DARKNESS,
-                20*game.getHeadStartTimeInSec(),
+                20*time,
                 1,
                 false,
                 false
         ));
-        player.sendMessage(Color.YELLOW + "You can move after " + game.getHeadStartTime()/20 +  " seconds");
-
-        this.matchStartEvent();
     }
 
     @Override
@@ -78,6 +77,8 @@ public abstract class BaseHunterLifecycleHandler extends LifecycleHandler {
         Player player = this.hunter.getPlayer();
         if(player==null) return;
         player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
+        if(this.hunter.getManhuntGame().getGameState().equals(GameState.HEAD_START))
+            this.giveEffects(player, this.hunter.getManhuntGame());
         this.playerJoinServerEvent();
     }
 
@@ -97,29 +98,6 @@ public abstract class BaseHunterLifecycleHandler extends LifecycleHandler {
         if(player==null)return;
         player.sendMessage(Color.YELLOW + "You can still get this game, don't loose the hopes!");
 
-        World world = Bukkit.getWorld(Settings.OVERWORLD_NAME);
-        if (world == null) return;
-
-        Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
-            if(this.hunter.getManhuntGame().getGameManager().getDropManager().hasRespawnDropUnlocked()) {
-                long l = System.currentTimeMillis();
-                if ((l - lastRespawnDropMillis) / 1000 > DROP_CAP) {
-
-                    double theta = ThreadLocalRandom.current().nextDouble(0, 2*Math.PI);
-                    double radius = DROP_RADIUS * ThreadLocalRandom.current().nextDouble(0.3, 1.0);
-
-                    double offsetX = radius * Math.cos(theta);
-                    double offsetZ = radius * Math.sin(theta);
-
-                    Location dropLoc = player.getLocation().clone().add(offsetX, 0, offsetZ);
-
-                    Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () ->
-                                    new RespawnDrop(dropLoc).spawnDrop(),
-                            20L);
-                    this.lastRespawnDropMillis = l;
-                }
-            }
-        }, 5L);
         this.playerRespawnEvent();
     }
 

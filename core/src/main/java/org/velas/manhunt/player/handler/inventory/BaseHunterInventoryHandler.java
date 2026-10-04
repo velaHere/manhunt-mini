@@ -22,6 +22,10 @@ public final class BaseHunterInventoryHandler extends InventoryHandler {
     @Override
     public boolean inventoryClick(InventoryClickEvent event) {
         if(!hunter.isOnline()) return false;
+        if(!hunter.isAlive()) {
+            event.setCancelled(true);
+            return false;
+        }
         Inventory inv = event.getClickedInventory();
         if (inv == null) return false;
         if (inv.getType() != InventoryType.PLAYER) return false;
@@ -35,6 +39,10 @@ public final class BaseHunterInventoryHandler extends InventoryHandler {
     @Override
     public boolean inventoryDrag(InventoryDragEvent event) {
         if(!hunter.isOnline()) return false;
+        if(!hunter.isAlive()) {
+            event.setCancelled(true);
+            return false;
+        }
         if (event.getInventory().getType() != InventoryType.PLAYER) return false;
         if (event.getInventorySlots().contains(8)){
             event.setCancelled(true);
@@ -46,6 +54,10 @@ public final class BaseHunterInventoryHandler extends InventoryHandler {
     @Override
     public boolean itemDrop(PlayerDropItemEvent event) {
         if(!hunter.isOnline()) return false;
+        if(!hunter.isAlive()) {
+            event.setCancelled(true);
+            return false;
+        }
         if (this.hunter.getManhuntGame().getGameManager().getGameFlowManager().ifHuntersCannotMove()) {
             event.setCancelled(true);
             return false;
@@ -56,6 +68,10 @@ public final class BaseHunterInventoryHandler extends InventoryHandler {
     @Override
     public boolean itemPickup(EntityPickupItemEvent event) {
         if(!hunter.isOnline()) return false;
+        if(!hunter.isAlive()) {
+            event.setCancelled(true);
+            return false;
+        }
         if (this.hunter.getManhuntGame().getGameManager().getGameFlowManager().ifHuntersCannotMove()){
             event.setCancelled(true);
             return false;
@@ -65,6 +81,10 @@ public final class BaseHunterInventoryHandler extends InventoryHandler {
 
     @Override
     public boolean handSwap(PlayerSwapHandItemsEvent event) {
+        if(!hunter.isAlive()) {
+            event.setCancelled(true);
+            return false;
+        }
         return hunter.isOnline();
     }
 }

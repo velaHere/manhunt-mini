@@ -11,15 +11,20 @@ import org.jetbrains.annotations.NotNull;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItemType;
+import org.velas.manhunt.dropSystem.drops.RespawnDrop;
+import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.player.Hunter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
 
+    private static final int DROP_CAP = 5*60; // -> seconds
+    private static final int DROP_RADIUS = 10; // -> blocks
     private static final int RESPAWN_TIME_INTERVAL_SECONDS = 10;
 
     private final List<ItemStack> keepContents = new ArrayList<>();
@@ -70,18 +75,33 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
         keepContents.clear();
         Player player = event.getEntity().getPlayer();
         if(player==null) return;
-        List<ItemStack> allContents = event.getDrops();
-        Collections.shuffle(allContents);
 
-        int keepAmount = (int) Math.ceil(allContents.size()* (Settings.getConfigSettings().getKEEP_INVENTORY_PERCENTAGE()/100));
+        if (this.hunter.getManhuntGame().getGameState().equals(GameState.STRONGHOLD)) {
+            List<ItemStack> drops = event.getDrops();
 
-        for(int i = 0; i < keepAmount; i++) keepContents.add(allContents.get(i));
-        allContents.removeAll(keepContents);
+            double percentage = Math.max(0, Math.min(Settings.getConfigSettings().getKEEP_INVENTORY_PERCENTAGE(), 100));
 
-        Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () ->{
+            if (!drops.isEmpty() && percentage > 0) {
+                Collections.shuffle(drops);
+
+                int keepAmount = (int) Math.round(drops.size() * percentage / 100.0);
+                keepAmount = Math.min(keepAmount, drops.size());
+
+                List<ItemStack> kept = drops.subList(0, keepAmount);
+                for (ItemStack item : kept) {
+                    if (item != null && !item.getType().isAir()) {
+                        keepContents.add(item);
+                    }
+                }
+
+                kept.clear();
+            }
+        }
+
+        Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
             if (!player.isOnline()) return;
             player.spigot().respawn();
-        }, 4L);
+        }, 1L);
     }
 
     private void giveSpectatorEffects() {
@@ -129,8 +149,31 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
         player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
 
         this.giveItems(player);
-        keepContents.forEach(item -> player.getInventory().addItem(item));
-        keepContents.clear();
+        if(!keepContents.isEmpty()) {
+            keepContents.forEach(item -> player.getInventory().addItem(item));
+            keepContents.clear();
+        }
+
+        Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
+            if(this.hunter.getManhuntGame().getGameManager().getDropManager().hasRespawnDropUnlocked()) {
+                long l = System.currentTimeMillis();
+                if ((l - lastRespawnDropMillis) / 1000 > DROP_CAP) {
+
+                    double theta = ThreadLocalRandom.current().nextDouble(0, 2*Math.PI);
+                    double radius = DROP_RADIUS * ThreadLocalRandom.current().nextDouble(0.3, 1.0);
+
+                    double offsetX = radius * Math.cos(theta);
+                    double offsetZ = radius * Math.sin(theta);
+
+                    Location dropLoc = player.getLocation().clone().add(offsetX, 0, offsetZ);
+
+                    Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () ->
+                                    new RespawnDrop(dropLoc).spawnDrop(),
+                            20L);
+                    this.lastRespawnDropMillis = l;
+                }
+            }
+        }, 5L);
     }
 
     private void createRespawnTimer() {
@@ -161,10 +204,9 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
                 return;
             }
 
-            String title = "§6You will be Respawned in";
-            String subtitle = String.valueOf(time--);
+            String subtitle = "§eYou will respawn in §c" + time-- + "§e seconds!";
 
-            player.sendTitle(title, subtitle, 0, 20, 0);
+            player.sendTitle("§cYOU DIED!", subtitle, 0, 20, 0);
         }
     }
 }

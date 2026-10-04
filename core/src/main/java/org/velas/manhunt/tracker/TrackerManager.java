@@ -1,7 +1,6 @@
 package org.velas.manhunt.tracker;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
@@ -120,6 +119,9 @@ public class TrackerManager {
 
             Player player = manhuntPlayer.getPlayer();
             if(player==null) continue;
+
+            getCompass(player);
+
             String playerName = player.getName(),
                     worldName = player.getWorld().getName();
             int targetNo = hunter.getTarget();
@@ -132,9 +134,10 @@ public class TrackerManager {
 
             if (target == null || !target.isOnline() || target.isDead()){
                 if (target != null && target.isDead()) continue;
-                player.sendMessage(Color.YELLOW + "Resetting the player tracked");
-                player.sendMessage(Color.AQUA + "If this message is spamming then please switch your compass target");
-                hunter.setTarget(getValidTarget(playerManager.getRunners().size() - 1));
+                int validTarget = getValidTarget(playerManager.getRunners().size() - 1);
+                if(validTarget == -1) continue;
+                player.sendMessage(Color.AQUA + "Tracker Target Updated, Right Click to know how you are tracking now");
+                hunter.setTarget(validTarget);
                 continue;
             }
 
@@ -178,11 +181,7 @@ public class TrackerManager {
     }
 
     private void setCompassLocation(Player player, Location newTrackLocation){
-        ItemStack compass = player.getInventory().getItem(8);
-        if (compass == null || !compass.getType().equals(Material.COMPASS)) {
-            player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
-            return;
-        }
+        ItemStack compass = getCompass(player);
 
         ItemMeta meta = compass.getItemMeta();
         if (meta == null) return;
@@ -210,5 +209,20 @@ public class TrackerManager {
         }
         if (runners.get(index).getPlayer() == null){ return -1; }
         return index; // fallback if no valid player found
+    }
+
+    private ItemStack getCompass(Player player) {
+        ItemStack compass = player.getInventory().getItem(8);
+
+        if (compass == null || !CustomItemType.matches(compass, CustomItemType.TRACKER_COMPASS)) {
+            compass = CustomItemType.create(CustomItemType.TRACKER_COMPASS);
+            player.getInventory().setItem(8, compass);
+
+            ItemMeta meta = compass.getItemMeta();
+            if (meta == null) return compass;
+            compass.setItemMeta(meta);
+        }
+
+        return compass;
     }
 }

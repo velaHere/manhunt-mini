@@ -30,7 +30,7 @@ public final class Dash extends ActiveAbility implements OnInteractAbility {
     protected boolean onActivate(Event event) {
 
         if (!(event instanceof PlayerInteractEvent event1)) return false;
-        if (event1.getAction() != Action.RIGHT_CLICK_AIR) return false;
+        if (event1.getAction() != Action.RIGHT_CLICK_AIR && event1.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         ItemStack item = event1.getItem();
         if(item==null) return false;
 

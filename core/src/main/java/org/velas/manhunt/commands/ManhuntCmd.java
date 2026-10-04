@@ -2,11 +2,8 @@ package org.velas.manhunt.commands;
 
 import org.bukkit.entity.Player;
 import org.velas.manhunt.Color;
+import org.velas.manhunt.commands.subcommands.*;
 import org.velas.manhunt.config.Settings;
-import org.velas.manhunt.commands.subcommands.LobbySubCmd;
-import org.velas.manhunt.commands.subcommands.MatchSubCmd;
-import org.velas.manhunt.commands.subcommands.SetLobbySubCmd;
-import org.velas.manhunt.commands.subcommands.TeamSubCmd;
 
 public class ManhuntCmd extends CustomCommand{
 
@@ -16,6 +13,7 @@ public class ManhuntCmd extends CustomCommand{
         this.subCommands.add(new SetLobbySubCmd("setlobby", null, Settings.SETUP_PERMISSION));
         this.subCommands.add(new TeamSubCmd("teams", null, Settings.SETUP_PERMISSION));
         this.subCommands.add(new MatchSubCmd("match", null, Settings.SETUP_PERMISSION));
+        this.subCommands.add(new RecipeCommand("recipe", null, null));
     }
 
     @Override
@@ -41,7 +39,7 @@ public class ManhuntCmd extends CustomCommand{
             player.sendMessage(Color.AQUA + "/manhunt lobby");
             player.sendMessage(Color.AQUA + "/manhunt setlobby");
             player.sendMessage(Color.AQUA + "/manhunt teams <teamName> <add/remove> <playerName>");
-            player.sendMessage(Color.AQUA + "/manhunt match <start/stop> time(in SEC)");
+            player.sendMessage(Color.AQUA + "/manhunt match <start/stop> <village> <time(in SEC)> <seed>");
         }
     }
 }

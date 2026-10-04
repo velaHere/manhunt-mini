@@ -5,21 +5,29 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.velas.manhunt.Manhunt;
+import org.velas.manhunt.ability.Ability;
 import org.velas.manhunt.ability.AbilityType;
 import org.velas.manhunt.ability.ActiveAbility;
 import org.velas.manhunt.ability.event.OnDamageAbility;
 import org.velas.manhunt.ability.event.OnInteractAbility;
 import org.velas.manhunt.avatar.Avatar;
+import org.velas.manhunt.game.ManhuntGame;
+import org.velas.manhunt.player.ManhuntPlayer;
 
 public final class Stealth extends ActiveAbility implements OnInteractAbility, OnDamageAbility {
 
@@ -27,6 +35,12 @@ public final class Stealth extends ActiveAbility implements OnInteractAbility, O
     private boolean active = false;
     private boolean breakOnGetDamage = false;
     private BukkitTask informer;
+
+    static {
+        Manhunt.getINSTANCE().getServer().getPluginManager().registerEvents(
+                        new TargetBlocker(), Manhunt.getINSTANCE()
+                );
+    }
 
     public Stealth(Avatar avatar, AbilityType type) {
         super("stealth", avatar, type, 30);
@@ -58,7 +72,12 @@ public final class Stealth extends ActiveAbility implements OnInteractAbility, O
         player.spawnParticle(Particle.SMOKE_NORMAL, player.getLocation(), 20, 0.3, 0.1, 0.3, 0);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§aStealth Activated!"));
 
-        active=true;
+        active = true;
+
+        for (Entity entity : player.getNearbyEntities(32, 32, 32)) {
+            if (!(entity instanceof Mob mob)) continue;
+            if (player.equals(mob.getTarget())) mob.setTarget(null);
+        }
 
         this.informer = Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
             active=false;
@@ -97,5 +116,29 @@ public final class Stealth extends ActiveAbility implements OnInteractAbility, O
     @Override
     public void onInteract(PlayerInteractEvent event) {
         tryActivate(event);
+    }
+
+    private static class TargetBlocker implements Listener {
+        @EventHandler
+        public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
+
+            ManhuntGame currentGame = ManhuntGame.getCurrentGame();
+
+            if(!currentGame.isRunning()) return;
+
+            if(!(event.getTarget() instanceof Player player)) return;
+
+            ManhuntPlayer manhuntPlayer = currentGame.getGameManager().getPlayerManager().getManhuntPlayer(player);
+            if(manhuntPlayer == null) return;
+            if(manhuntPlayer.getAvatar() == null) return;
+
+            for (Ability ability: manhuntPlayer.getAvatar().getAbilities()){
+                if(!(ability instanceof Stealth stealth)) continue;
+                if(stealth.active) {
+                    event.setCancelled(true);
+                }
+                break;
+            }
+        }
     }
 }

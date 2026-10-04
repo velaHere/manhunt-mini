@@ -3,6 +3,7 @@ drop-interval: 120
 compass-radius: 15
 headstart: 30
 drop-lifetime: 180
+allow-abilities: true
 team:
   hunter:
     prefix: "&4[Hunter]"

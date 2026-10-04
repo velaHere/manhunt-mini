@@ -15,6 +15,7 @@ public final class ConfigManager {
     private static final String SPECTATOR_TEAM_PREFIX = "team.spectator.prefix";
     private static final String LEVEL_WORLD_NAME = "world.default";
     private static final String LOBBY_WORLD_NAME = "world.lobby";
+    private static final String ALLOW_ABILITIES_NAME = "allow-abilities";
 
     private ConfigManager() {}
 
@@ -42,6 +43,7 @@ public final class ConfigManager {
                         .spectatorTeamPrefix(config.getString(SPECTATOR_TEAM_PREFIX))
                         .defaultWorldName(config.getString(LEVEL_WORLD_NAME))
                         .lobbyWorldName(config.getString(LOBBY_WORLD_NAME))
+                        .allowAbilities(config.getBoolean(ALLOW_ABILITIES_NAME))
                         .build()
         );
     }

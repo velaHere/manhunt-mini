@@ -19,6 +19,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
+import org.velas.manhunt.customItems.CustomRecipe;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 
@@ -65,6 +67,12 @@ public final class Gola implements CustomItem {
         recipe.addIngredient(Material.BLAZE_POWDER);
         recipe.addIngredient(Material.COAL);
         recipe.addIngredient(Material.GUNPOWDER);
+
+        CustomRecipe.register(CustomItemType.GOLA, new CustomRecipe("Gola", this)
+                .shape(new String[]{"BCG", "   ", "   "})
+                .setIngredient('B', new ItemStack(Material.BLAZE_POWDER))
+                .setIngredient('C', new ItemStack(Material.COAL))
+                .setIngredient('G', new ItemStack(Material.GUNPOWDER)));
 
         Bukkit.addRecipe(recipe);
     }

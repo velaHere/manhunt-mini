@@ -3,6 +3,8 @@ package org.velas.manhunt.tracker;
 import org.bukkit.Location;
 import org.velas.manhunt.config.Settings;
 
+import java.util.Objects;
+
 public class LastTrackedLocation {
 
     private Location overworld;
@@ -27,7 +29,7 @@ public class LastTrackedLocation {
 
     public void setLocation(Location location){
 
-        switch (location.getWorld().getName()){
+        switch (Objects.requireNonNull(location.getWorld()).getName()){
             case Settings.OVERWORLD_NAME -> this.overworld=location;
             case Settings.NETHER_WORLD_NAME -> this.nether=location;
             case Settings.END_WORLD_NAME -> this.end=location;

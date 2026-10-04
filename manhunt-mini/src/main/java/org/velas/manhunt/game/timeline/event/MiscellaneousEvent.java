@@ -32,20 +32,29 @@ public final class MiscellaneousEvent extends BaseMiscellaneousEvent {
 
         int timeElapsedAfterStrongholdRequest = this.gameTimeLine.getTimeElapsedAfterStrongholdRequest();
 
-        if(timeElapsedAfterStrongholdRequest == 50){
+        if (timeElapsedAfterStrongholdRequest >= 10 && timeElapsedAfterStrongholdRequest <=60) {
+            GameFlowManager.showTransitionTitles(timeElapsedAfterStrongholdRequest-1);
+        }
 
+        if (timeElapsedAfterStrongholdRequest == 10) {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 GameFlowManager.tpPlayerToLobbyForTransition(player);
                 GameFlowManager.playIntenseVoidEffect(player);
             });
-        }else if(timeElapsedAfterStrongholdRequest == 55){
+        }
+        /*else if(timeElapsedAfterStrongholdRequest == 50){
+
+        }*/else if(timeElapsedAfterStrongholdRequest == 15){
             this.gameManager.getWorldManager().setSpawnToStronghold();
-        }else if (timeElapsedAfterStrongholdRequest > 50 && timeElapsedAfterStrongholdRequest <=60) {
-            GameFlowManager.showTransitionTitles(timeElapsedAfterStrongholdRequest-1);
-        }else if(timeElapsedAfterStrongholdRequest == 61){
+        }else if(timeElapsedAfterStrongholdRequest == 25){
             this.gameManager.getWorldManager().setWorldBorders();
             this.gameManager.getWorldManager().preloadAsync(1);
-        } else if (timeElapsedAfterStrongholdRequest == 65){
+            this.gameManager.getWorldManager().preloadAsync(
+                    1,
+                    this.gameManager.getWorldManager()
+                            .getOverworld().getSpawnLocation().clone().add(100, 0, 0)
+            );
+        } else if (timeElapsedAfterStrongholdRequest == 60){
 
             Bukkit.getOnlinePlayers().forEach(player ->{
 
@@ -60,6 +69,10 @@ public final class MiscellaneousEvent extends BaseMiscellaneousEvent {
                 }else{
                     player.teleport(this.gameManager.getWorldManager().getOverworld()
                             .getSpawnLocation().clone().add(0, 8, 0));
+                }
+
+                for (PotionEffect effect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(effect.getType());
                 }
 
                 player.addPotionEffect(new PotionEffect(

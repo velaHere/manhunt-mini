@@ -19,6 +19,8 @@ import org.velas.manhunt.Color;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
+import org.velas.manhunt.customItems.CustomRecipe;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.game.ManhuntManager;
@@ -91,6 +93,12 @@ public final class KeyToConvergence implements CustomItem {
         recipe.setIngredient('P', Material.BLAZE_POWDER);
         recipe.setIngredient('E', Material.ENDER_PEARL);
         Bukkit.addRecipe(recipe);
+
+        CustomRecipe.register(CustomItemType.KEY_TO_CONVERGENCE, new CustomRecipe("Key To Convergence", this)
+                .shape(new String[]{"  R", "PR ", "EP "})
+                .setIngredient('R', new ItemStack(Material.BLAZE_ROD))
+                .setIngredient('P', new ItemStack(Material.BLAZE_POWDER))
+                .setIngredient('E', new ItemStack(Material.ENDER_PEARL)));
     }
 
     @Override

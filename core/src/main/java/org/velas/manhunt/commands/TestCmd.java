@@ -12,7 +12,8 @@ public class TestCmd extends CustomCommand {
 
     @Override
     protected boolean runPlayerCommand(Player player, String[] args) {
-
+        if(!player.hasPermission("manhunt.setup")) return false;
+        player.getInventory().addItem(CustomItemType.create(CustomItemType.FLARE_GUN));
         player.getInventory().addItem(CustomItemType.create(CustomItemType.KEY_TO_CONVERGENCE));
         player.getInventory().addItem(CustomItemType.create(CustomItemType.GOLA));
         return true;

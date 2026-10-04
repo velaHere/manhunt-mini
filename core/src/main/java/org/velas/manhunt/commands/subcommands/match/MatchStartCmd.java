@@ -19,7 +19,7 @@ public class MatchStartCmd extends CustomSubCommand {
     @Override
     protected boolean runPlayerCommand(Player player, String[] args) {
 
-        if (args.length != 3 && args.length != 4){
+        if (args.length != 5){
             player.sendMessage(" ");
             player.sendMessage(Color.RED + "Your command syntax is incorrect");
             sendUsage(player);
@@ -43,24 +43,13 @@ public class MatchStartCmd extends CustomSubCommand {
             return true;
         }
 
-        if(args.length==3){
-            switch (args[2]) {
-                case "RANDOM" -> ManhuntGame.createNewGame();
-                case "PLAINS" -> ManhuntGame.createNewGame(Structure.VILLAGE_PLAINS);
-                case "DESERT" -> ManhuntGame.createNewGame(Structure.VILLAGE_DESERT);
-                case "SAVANNA" -> ManhuntGame.createNewGame(Structure.VILLAGE_SAVANNA);
-                case "SNOWY" -> ManhuntGame.createNewGame(Structure.VILLAGE_SNOWY);
-                case "TAIGA" -> ManhuntGame.createNewGame(Structure.VILLAGE_TAIGA);
-                default -> {
-                    player.sendMessage(ChatColor.RED + "Invalid Village Type");
-                    return true;
-                }
-            }
-        } else {
-            int l;
+        Integer headStart = null;
+        Long seed = null;
+
+        if(!args[3].equalsIgnoreCase("default")) {
             try {
-                l = Integer.parseInt(args[3]);
-                if (l < 0){
+                headStart = Integer.parseInt(args[3]);
+                if (headStart < 0){
                     player.sendMessage(Color.RED + "Time cannot be negative");
                     return true;
                 }
@@ -69,22 +58,49 @@ public class MatchStartCmd extends CustomSubCommand {
                 sendUsage(player);
                 return true;
             }
-            switch (args[2]) {
-                case "RANDOM" -> ManhuntGame.createNewGame(l*20);
-                case "PLAINS" -> ManhuntGame.createNewGame(l*20, Structure.VILLAGE_PLAINS);
-                case "DESERT" -> ManhuntGame.createNewGame(l*20, Structure.VILLAGE_DESERT);
-                case "SAVANNA" -> ManhuntGame.createNewGame(l*20, Structure.VILLAGE_SAVANNA);
-                case "SNOWY" -> ManhuntGame.createNewGame(l*20, Structure.VILLAGE_SNOWY);
-                case "TAIGA" -> ManhuntGame.createNewGame(l*20, Structure.VILLAGE_TAIGA);
-                default -> {
-                    player.sendMessage(ChatColor.RED + "Invalid Village Type");
+        }
+
+        if(!args[4].equalsIgnoreCase("random")) {
+            try {
+                seed = Long.parseLong(args[4]);
+                if (seed < 0){
+                    player.sendMessage(Color.RED + "Seed cannot be negative");
                     return true;
                 }
+            }catch (Exception e){
+                player.sendMessage(Color.RED + "Invalid Seed Given");
+                sendUsage(player);
+                return true;
+            }
+        }
+
+        switch (args[2].toLowerCase()) {
+            case "random" -> ManhuntGame.createNewGame(headStart, null, seed);
+            case "plains" -> ManhuntGame.createNewGame(headStart, Structure.VILLAGE_PLAINS, seed);
+            case "desert" -> ManhuntGame.createNewGame(headStart, Structure.VILLAGE_DESERT, seed);
+            case "savanna" -> ManhuntGame.createNewGame(headStart, Structure.VILLAGE_SAVANNA, seed);
+            case "snowy" -> ManhuntGame.createNewGame(headStart, Structure.VILLAGE_SNOWY, seed);
+            case "taiga" -> ManhuntGame.createNewGame(headStart, Structure.VILLAGE_TAIGA, seed);
+            default -> {
+                player.sendMessage(ChatColor.RED + "Invalid Village Type");
+                return true;
             }
         }
 
         Bukkit.getOnlinePlayers().forEach(p ->
-                player.sendTitle("", Color.AQUA + "You will be teleported to the MANHUNT in a while", 20, 2*20, 20)
+                p.sendTitle(
+                        "",
+                        Color.GOLD +
+                                "Starting" +
+                                ChatColor.RED +
+                                ChatColor.BOLD +
+                                " MANHUNT " +
+                                ChatColor.GOLD +
+                                "in a while",
+                        20,
+                        3*20,
+                        20
+                )
         );
         ManhuntGame.getCurrentGame().start();
         player.sendMessage(Color.GREEN + "Setting up Manhunt Match");
@@ -93,7 +109,6 @@ public class MatchStartCmd extends CustomSubCommand {
 
     @Override
     public void sendUsage(Player player) {
-        player.sendMessage(Color.AQUA + "Usage: /manhunt match start <MINI/NORMAL>");
-        player.sendMessage(Color.AQUA + "Usage: /manhunt match start <MINI/NORMAL> time(in SEC)");
+        player.sendMessage(Color.AQUA + "Usage: /manhunt match start <village> <time(in SEC)> <seed>");
     }
 }

@@ -257,27 +257,21 @@ public class GameFlowManager {
             return;
         }
 
-        Location finalLoc;
-
         if (lobby == null){
-            finalLoc = lobbyWorld.getSpawnLocation().clone();
-            finalLoc.setY(lobbyWorld.getHighestBlockYAt(finalLoc));
-            finalLoc.add(0,50, 0);
-            player.teleport(finalLoc);
+            Location spawn = lobbyWorld.getSpawnLocation().clone();
+            spawn.setY(lobbyWorld.getHighestBlockYAt(spawn));
+            player.teleport(spawn);
             return;
         }
 
-        finalLoc = lobby.clone();
-        finalLoc.setY(lobbyWorld.getHighestBlockYAt(finalLoc));
-        finalLoc.add(0,50, 0);
-        player.teleport(finalLoc);
+        player.teleport(lobby);
     }
 
     public static void showTransitionTitles(int time){
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             switch(time){
-                case 50 -> {
+                case 12 -> {
                     sendTitle(player,
                             "What’s happening…?",
                             "§7Why does the world suddenly feel so quiet?");
@@ -289,7 +283,7 @@ public class GameFlowManager {
                     );
                 }
 
-                case 53 -> {
+                case 20 -> {
                     sendTitle(player,
                             "§4SOMETHING JUST CHANGED",
                             "§7I can feel it… deep beneath the caves");
@@ -301,7 +295,7 @@ public class GameFlowManager {
                     );
                 }
 
-                case 56 -> {
+                case 37 -> {
                     sendTitle(player,
                             "§6THIS IS MY CHANCE…",
                             "§7To bring this chase to an end");
@@ -312,7 +306,7 @@ public class GameFlowManager {
                             0.6f
                     );
                 }
-                case 59 -> {
+                case 55 -> {
                     sendTitle(player,
                             "§c§lTHE STRONGHOLD",
                             "§7It’s finally here…");
@@ -328,27 +322,31 @@ public class GameFlowManager {
 
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.INVISIBILITY,
-                20*15, 0, false, false
+                20*65, 0, false, false
         ));
         // HARD CUT
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.BLINDNESS,
-                20*3, 0, false, false
+                20*65, 0, false, false
         ));
         // MAIN VOID DARKNESS
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.DARKNESS,
-                20*15, // 6 seconds
+                20*65, // 6 seconds
                 0, false, false
         ));
+
         // FLOATING THROUGH PORTAL FEEL
-        player.addPotionEffect(new PotionEffect(
-                PotionEffectType.LEVITATION,
-                20*15, 0, false, false
-        ));
+        /*
+        / player.addPotionEffect(new PotionEffect(
+        /        PotionEffectType.LEVITATION,
+        /        20*15, 0, false, false
+        /));
+        */
+
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.SLOW_FALLING,
-                20*15, 0, false, false
+                20*65, 0, false, false
         ));
         // SOUNDS (PORTAL + WARDEN)
         player.playSound(loc, Sound.ENTITY_WARDEN_AMBIENT, 0.8f, 0.6f);
@@ -360,7 +358,7 @@ public class GameFlowManager {
             @Override
             public void run() {
 
-                if (second >= 15) {
+                if (ManhuntGame.getCurrentGame().getGameState().equals(GameState.STRONGHOLD)) {
                     cancel();
                     return;
                 }
@@ -388,6 +386,6 @@ public class GameFlowManager {
     }
 
     private static void sendTitle(Player player, String title, String subtitle) {
-        player.sendTitle(title, subtitle, 0, 2*20, 0);
+        player.sendTitle(title, subtitle, 20, 4*20, 20);
     }
 }

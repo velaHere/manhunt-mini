@@ -36,7 +36,7 @@ public class ScoreManager {
 
     public void updateSideBar(int time){
         for(ManhuntPlayer manhuntPlayer: this.manager.getPlayerManager().getPlayers()){
-            if(!manhuntPlayer.isOnline()) return;
+            if(!manhuntPlayer.isOnline()) continue;
             manhuntPlayer.getHandlerBundle().sidebarHandler().updateSidebar(time);
         }
     }

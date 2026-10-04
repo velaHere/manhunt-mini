@@ -2,6 +2,7 @@ package org.velas.manhunt.game;
 
 
 import org.bukkit.generator.structure.Structure;
+import org.jetbrains.annotations.Nullable;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.ability.AbilityDispatcher;
 import org.velas.manhunt.dropSystem.DropManager;
@@ -24,12 +25,12 @@ public class ManhuntManager{
     private final AbilityDispatcher abilityDispatcher;
     private final GameTimeLine gameTimeLine;
 
-    public ManhuntManager(ManhuntGame game, Structure village){
+    public ManhuntManager(ManhuntGame game, @Nullable Structure village, @Nullable Long seed){
         this.game=game;
         this.gameFlowManager=new GameFlowManager(this);
         this.playerManager=new PlayerManager(this);
         this.trackerManager=this.playerManager.getTrackerManager();
-        this.worldManager=new WorldManager(village);
+        this.worldManager=new WorldManager(village, seed);
         this.scoreboardManager=new ScoreManager(this);
         this.dropManager=new DropManager(this);
         this.abilityDispatcher = new AbilityDispatcher(this);

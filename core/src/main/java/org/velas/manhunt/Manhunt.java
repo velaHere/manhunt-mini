@@ -51,7 +51,7 @@ public final class Manhunt extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        ManhuntGame.createNewGame();
+        ManhuntGame.createNewGame(null, null, null);
 
         ScoreManager.init();
         ScoreManager.setUpTeams();

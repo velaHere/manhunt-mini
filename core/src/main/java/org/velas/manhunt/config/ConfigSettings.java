@@ -20,6 +20,7 @@ public final class ConfigSettings {
     private String SPECTATOR_TEAM_PREFIX = ChatColor.DARK_GRAY + "[Spectator] ";
     private String LEVEL_WORLD_NAME = "world";
     private String LOBBY_WORLD_NAME = "lobby";
+    private boolean ALLOW_ABILITIES = true;
 
     ConfigSettings() {}
 
@@ -104,6 +105,10 @@ public final class ConfigSettings {
         return LOBBY_WORLD_NAME;
     }
 
+    public boolean isALLOW_ABILITIES() {
+        return ALLOW_ABILITIES;
+    }
+
     static class ConfigBuilder {
 
         private final ConfigSettings settings;
@@ -119,7 +124,12 @@ public final class ConfigSettings {
         public ConfigBuilder keepInventoryPercentage(double amt) {
             if(amt<0 || amt>100)
                 throw new IllegalArgumentException("Keep inventory percentage cannot be less than 0 or greater than 100, fix it in config.yml");
-            settings.KEEP_INVENTORY_PERCENTAGE = Math.ceil(amt/100);
+            settings.KEEP_INVENTORY_PERCENTAGE = amt;
+            return this;
+        }
+
+        public ConfigBuilder allowAbilities(boolean allowed) {
+            settings.ALLOW_ABILITIES = allowed;
             return this;
         }
 

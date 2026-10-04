@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.velas.manhunt.config.Settings;
+import org.velas.manhunt.customItems.CustomRecipe;
 import org.velas.manhunt.game.scoreboard.ScoreManager;
 import org.velas.scoreboard.api.Scoreboard;
 import org.velas.scoreboard.api.team.Team;
@@ -23,7 +24,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         if (strings.length == 1){
 
             if(commandSender.hasPermission(Settings.SETUP_PERMISSION)){
-                return toSuggest(List.of("match", "teams", "setlobby", "lobby"), strings[0]);
+                return toSuggest(List.of("match", "teams", "setlobby", "lobby", "recipe"), strings[0]);
             }
             return toSuggest(List.of("lobby"), strings[0]);
         }
@@ -43,6 +44,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                             ).toList(),
                             strings[1]
                     );
+                }
+            }
+            case "recipe" -> {
+                if(strings.length==2) {
+                    return toSuggest(new ArrayList<>(CustomRecipe.getRecipeIdList()), strings[1]);
                 }
             }
             case "teams" -> {
@@ -67,7 +73,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
                 if (strings.length == 4) {
 
-                    if (strings[2].equals("add")) {
+                    if (strings[2].equalsIgnoreCase("add")) {
 
                         List<String> toSuggestCommands = new ArrayList<>();
 
@@ -84,7 +90,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
                         return toSuggest(toSuggestCommands, strings[3]);
 
-                    } else if (strings[2].equals("remove")) {
+                    } else if (strings[2].equalsIgnoreCase("remove")) {
 
                         List<String> toSuggestCommands = new ArrayList<>();
 
@@ -111,15 +117,17 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             case "match" -> {
 
                 if (strings.length == 2) {
-                    return toSuggest(List.of("start", "stop"), strings[1]);
+                    return toSuggest(List.of("start", "stop", "start_previous"), strings[1]);
                 }
 
-                if (strings[1].equals("stop")) return List.of();
+                if (!strings[1].equalsIgnoreCase("start")) return List.of();
 
                 if (strings.length == 3) {
                     return toSuggest(List.of("RANDOM", "PLAINS", "DESERT", "SAVANNA", "SNOWY", "TAIGA"), strings[2]);
                 } else if (strings.length == 4) {
-                    return toSuggest(List.of("30", "45", "60", "90"), strings[3]);
+                    return toSuggest(List.of("30", "45", "60", "90", "default"), strings[3]);
+                } else if (strings.length == 5) {
+                    return toSuggest(List.of("random"), strings[4]);
                 }
             }
         }
@@ -129,7 +137,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
     public List<String> toSuggest(List<String> toSuggestCommands, String arg){
         List<String> commands = new ArrayList<>();
         for (String cmd: toSuggestCommands){
-            if (cmd.startsWith(arg)) commands.add(cmd);
+            if (cmd.toLowerCase().startsWith(arg.toLowerCase())) commands.add(cmd);
         }
         return commands;
     }

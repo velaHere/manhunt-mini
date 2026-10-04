@@ -26,11 +26,11 @@ public final class ManhuntGame {
 
     private ManhuntGame(int headStartTime){
         this.gameState=GameState.LOBBY;
-        this.headStartTime=headStartTime;
+        this.headStartTime=headStartTime*20L;
     }
 
-    public void init(@Nullable Structure village){
-        this.gameManager=new ManhuntManager(this, village);
+    private void init(@Nullable Structure village, @Nullable Long seed){
+        this.gameManager=new ManhuntManager(this, village, seed);
         gameManager.init();
     }
 
@@ -44,33 +44,12 @@ public final class ManhuntGame {
         return !hunters.getPlayers().isEmpty() && !runners.getPlayers().isEmpty();
     }
 
-    public static void createNewGame(){
-        commonCG();
-        game=new ManhuntGame();
-        game.init(null);
-    }
-
-    public static void createNewGame(int headStartTime){
-        commonCG();
-        game = new ManhuntGame(headStartTime);
-        game.init(null);
-    }
-
-    public static void createNewGame(@NotNull Structure village) {
-        commonCG();
-        game=new ManhuntGame();
-        game.init(village);
-    }
-
-    public static void createNewGame(int headStartTime, @NotNull Structure village) {
-        commonCG();
-        game=new ManhuntGame(headStartTime);
-        game.init(village);
-    }
-
-    private static void commonCG(){
+    public static void createNewGame(@Nullable Integer headStartTime, @Nullable Structure village, @Nullable Long seed) {
         if(game!=null)
             HandlerList.unregisterAll(game.gameManager.getAbilityDispatcher());
+        if(headStartTime == null) game=new ManhuntGame();
+        else game = new ManhuntGame(headStartTime);
+        game.init(village, seed);
     }
 
     @NotNull

@@ -60,11 +60,11 @@ public class ClassSelection extends Menu {
         switch (name) {
             case "Assassin" -> {
                 mp.setAvatar(AvatarType.ASSASSIN);
-                player.sendMessage(ChatColor.GREEN + "✔ " + ChatColor.WHITE + name + ChatColor.GRAY + " selected");
+                player.sendMessage(createMessage(name));
             }
             case "Swordsman" -> {
                 mp.setAvatar(AvatarType.SWORDSMAN);
-                player.sendMessage(ChatColor.GREEN + "✔ " + ChatColor.WHITE + name + ChatColor.GRAY + " selected");
+                player.sendMessage(createMessage(name));
             }
             default -> mp.setAvatar(AvatarType.DEFAULT);
         }
@@ -73,10 +73,14 @@ public class ClassSelection extends Menu {
         player.closeInventory();
     }
 
+    private String createMessage(String name) {
+        return ChatColor.GREEN + "✔ " + ChatColor.WHITE + name + ChatColor.GRAY + " selected";
+    }
+
     @Override
     public void setMenuItems() {
-        inventory.setItem(11, assassin());
-        inventory.setItem(12, swordsman());
+        inventory.setItem(12, assassin());
+        inventory.setItem(14, swordsman());
     }
 
 
