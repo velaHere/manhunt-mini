@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.velas.manhunt.commands.*;
-import org.velas.manhunt.config.ConfigManager;
+import org.velas.manhunt.config.Config;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.game.ManhuntGame;
@@ -36,12 +36,20 @@ public final class Manhunt extends JavaPlugin {
 
         INSTANCE = this;
         BroadcastCredits.printConsoleBranding();
-        ConfigManager.init(this);
+        Config.init();
 
-        World lobby = Bukkit.createWorld(new WorldCreator(Settings.getConfigSettings().getLOBBY_WORLD_NAME()));
-        if (lobby != null){
-            lobby.setDifficulty(Difficulty.PEACEFUL);
-        }
+        String lobbyWorld = Settings.config().game().world().getLobbyWorld();
+
+        World lobby = Bukkit.createWorld(
+                new WorldCreator(lobbyWorld)
+        );
+
+        if (lobby == null)
+            throw new IllegalArgumentException(
+                    "Lobby world does not exist: " + lobbyWorld
+            );
+
+        lobby.setDifficulty(Difficulty.PEACEFUL);
 
         try{
             Class<?> clazz = Class.forName("org.velas.manhunt.ClassProviderImpl");

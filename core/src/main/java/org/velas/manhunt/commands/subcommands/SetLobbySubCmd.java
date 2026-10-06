@@ -21,12 +21,12 @@ public class SetLobbySubCmd extends CustomSubCommand {
             return true;
         }
 
-        if (!player.getWorld().getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME())){
+        if (!player.getWorld().getName().equals(Settings.config().game().world().getLobbyWorld())){
             player.sendMessage(Color.RED + "Lobby can only be set in the world with name -lobby-");
             return true;
         }
 
-        Settings.getConfigSettings().saveLobbySpawn(player.getLocation());
+        Settings.config().game().world().setLobbySpawn(player.getLocation());
         player.sendMessage(Color.GREEN + "Lobby have been set to your current location");
         return true;
     }

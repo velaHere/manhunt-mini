@@ -48,21 +48,21 @@ public class ScoreManager {
 
         //Hunters
         Team teamHunter = scoreboard.team(hunterTeamName);
-        teamHunter.setPrefix(Settings.getConfigSettings().getHUNTER_TEAM_PREFIX());
+        teamHunter.setPrefix(Settings.config().team().hunter().getPrefix());
         teamHunter.setColor(TeamColor.RED);
         teamHunter.setFriendlyFire(true);
         teamHunter.setCanSeeFriendlyInvisibilities(true);
 
         //Runners
         Team teamRunner = scoreboard.team(runnerTeamName);
-        teamRunner.setPrefix(Settings.getConfigSettings().getRUNNER_TEAM_PREFIX());
+        teamRunner.setPrefix(Settings.config().team().runner().getPrefix());
         teamRunner.setColor(TeamColor.GREEN);
         teamRunner.setFriendlyFire(true);
         teamRunner.setCanSeeFriendlyInvisibilities(true);
 
         //Spectators
         Team teamSpectator = scoreboard.team(spectatorTeamName);
-        teamSpectator.setPrefix(Settings.getConfigSettings().getSPECTATOR_TEAM_PREFIX());
+        teamSpectator.setPrefix(Settings.config().team().spectator().getPrefix());
         teamSpectator.setColor(TeamColor.GRAY);
         teamSpectator.setFriendlyFire(false);
         teamSpectator.setCanSeeFriendlyInvisibilities(true);

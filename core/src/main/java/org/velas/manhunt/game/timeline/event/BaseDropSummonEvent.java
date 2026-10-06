@@ -7,7 +7,7 @@ import org.velas.manhunt.game.ManhuntGame;
 public abstract class BaseDropSummonEvent extends IntervalEvent {
 
     protected BaseDropSummonEvent(@NotNull ManhuntGame game) {
-        super(game, 60+game.getHeadStartTimeInSec(), Settings.getConfigSettings().getDROP_INTERVAL_SEC());
+        super(game, 60+game.getHeadStartTimeInSec(), Settings.config().drop().getInterval());
     }
 
     @Override

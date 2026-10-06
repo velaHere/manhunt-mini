@@ -42,7 +42,7 @@ public final class BaseSpectatorLifecycleHandler extends LifecycleHandler {
         player.getInventory().clear();
         player.sendMessage(Color.YELLOW + "A manhunt match is going on you can only spectate right now\n" + Color.GREEN + "Use compass to teleports to other players");
 
-        Location loc = Settings.getConfigSettings().getLobbySpawn();
+        Location loc = Settings.config().game().world().getLobbySpawn();
         if (loc == null) return;
         player.teleport(loc);
         GameFlowManager.applySpectatorsEffects(player);
@@ -61,7 +61,7 @@ public final class BaseSpectatorLifecycleHandler extends LifecycleHandler {
         Player player = spectator.getPlayer();
         if(player==null) return;
         GameFlowManager.applySpectatorsEffects(player);
-        Location loc = Settings.getConfigSettings().getLobbySpawn();
+        Location loc = Settings.config().game().world().getLobbySpawn();
 
         if (loc != null){
             if (!player.getLocation().getWorld().getName().equals(loc.getWorld().getName())){

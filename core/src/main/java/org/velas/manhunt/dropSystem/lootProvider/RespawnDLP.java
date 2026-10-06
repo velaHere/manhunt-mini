@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.velas.manhunt.dropSystem.loot.LootItem;
 import org.velas.manhunt.dropSystem.loot.LootItemGroup;
 import org.velas.manhunt.dropSystem.loot.LootSelector;
-import org.velas.manhunt.dropSystem.lootProvider.LootProvider;
 
 import java.util.ArrayList;
 import java.util.List;

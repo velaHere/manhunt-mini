@@ -19,7 +19,7 @@ public final class BaseRunnerMovementHandler implements MovementHandler {
     @Override
     public void onPlayerMove(PlayerMoveEvent event) {
         if(!this.runner.isOnline()) return;
-        if(event.getPlayer().getWorld().getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME())) return;
+        if(event.getPlayer().getWorld().getName().equals(Settings.config().game().world().getLobbyWorld())) return;
         ManhuntGame game = this.runner.getManhuntGame();
         if(game.isStarting()) event.setCancelled(true);
     }

@@ -31,7 +31,7 @@ public class PlayerDamage implements Listener {
 
         if (!(event.getEntity() instanceof Player player)) return;
 
-        if (player.getLocation().getWorld().getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME())){
+        if (player.getLocation().getWorld().getName().equals(Settings.config().game().world().getLobbyWorld())){
             event.setCancelled(true);
         }
 

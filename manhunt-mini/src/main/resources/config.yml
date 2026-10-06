@@ -1,18 +1,192 @@
-keep-inventory-percentage: 30
-drop-interval: 120
-compass-radius: 15
-headstart: 30
-drop-lifetime: 180
-allow-abilities: true
+# ╔══════════════════════════════════════════════════════════════════════════════╗
+# ║                                                                              ║
+# ║      ███╗   ███╗ █████╗ ███╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗████████╗       ║
+# ║      ████╗ ████║██╔══██╗████╗  ██║██║  ██║██║   ██║████╗  ██║╚══██╔══╝       ║
+# ║      ██╔████╔██║███████║██╔██╗ ██║███████║██║   ██║██╔██╗ ██║   ██║          ║
+# ║      ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██║╚██╗██║   ██║          ║
+# ║      ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝██║ ╚████║   ██║          ║
+# ║      ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝          ║
+# ║                                                                              ║
+# ║                       Made with love, by Dhiren06                            ║
+# ║                                                                              ║
+# ║                           MANHUNT MINI CONFIG                                ║
+# ║                                                                              ║
+# ║   Configure gameplay behavior for your Manhunt Mini server.                  ║
+# ║   Changes to this file are applied when the plugin is loaded or reloaded.    ║
+# ║                                                                              ║
+# ╚══════════════════════════════════════════════════════════════════════════════╝
+#
+#
+# ------------------------------------------------------------------------------
+# GAME
+# ------------------------------------------------------------------------------
+# General settings that control the main Manhunt game.
+#
+game:
+#
+  # Time in seconds given to the Runner before the Hunter is released.
+  # Set to 0 to start the hunt immediately.
+  head-start: 30
+#
+  # Radius in blocks used by the tracking compass when determining
+  # how close the Runner is to the tracked location.
+  compass-radius: 15
+#
+  # Percentage of a player's inventory that is retained when the
+  # plugin handles their death.
+  #
+  # Valid range: 0 - 100
+  # 0   = keep nothing
+  # 100 = keep everything
+  keep-inventory-percentage: 30
+#
+#
+  # --------------------------------------------------------------------------
+  # WORLDS
+  # --------------------------------------------------------------------------
+  # World names used by Manhunt Mini.
+  #
+  # The worlds are resolved by Bukkit using these names. The lobby world may
+  # be created by the plugin during startup if it does not already exist.
+#
+  world:
+#
+    # Main world used for the Manhunt game.
+    default: "world"
+#
+    # World used as the game lobby/setup area.
+    lobby:
+      # Name of the world used as the Manhunt lobby.
+      name: "lobby"
+
+      # Controls whether players are allowed to interact with the lobby environment.
+      #
+      # This includes actions such as:
+      # - Breaking blocks
+      # - Placing blocks
+      # - Dropping items
+      # - Picking up items
+      #
+      # op:
+      #   Whether server operators are allowed to interact by default.
+      #
+      # default:
+      #   Whether non-operators are allowed to interact by default.
+      #
+      # Permission plugins can be used to override the default permission
+      # behavior when the corresponding permission is explicitly granted.
+      allow-interactions:
+        op: true
+        default: false
+    #
+#
+    # ------------------------------------------------------------------------
+    # LOBBY SPAWN
+    # ------------------------------------------------------------------------
+    # Location where players are placed when entering the lobby.
+    #
+    # This section may be absent if a lobby spawn has not been configured yet.
+    # Use the plugin's setup command to save the lobby spawn.
+    #
+    # Don't Make any changes in this section, unless you know what are you doing.
+    #
+    # x, y, z = position in the lobby world
+    # yaw     = horizontal rotation
+    # pitch   = vertical rotation
+#
+    lobby-spawn:
+      x:
+      y:
+      z:
+      yaw:
+      pitch:
+#
+#
+# ------------------------------------------------------------------------------
+# DROP
+# ------------------------------------------------------------------------------
+# Controls the timed item drops used during the game.
+#
+drop:
+#
+  # Time in seconds between normal drops.
+  interval: 120
+#
+  # How long a dropped item remains before it is removed.
+  # Value is measured in seconds.
+  lifetime: 180
+#
+#
+  # --------------------------------------------------------------------------
+  # RESPAWN
+  # --------------------------------------------------------------------------
+  # Controls the special respawn-related drop behavior.
+#
+  RESPAWN:
+#
+    # Whether respawn drops are enabled.
+    enabled: true
+#
+    # Time in seconds between respawn-related drops/events.
+    cooldown: 300
+#
+    # Radius in blocks used when determining the valid respawn/drop area.
+    radius: 10
+#
+    # How long the respawn-related drop remains before it is removed.
+    # Value is measured in seconds.
+    lifetime: 45
+#
+#
+# ------------------------------------------------------------------------------
+# ABILITY
+# ------------------------------------------------------------------------------
+# Controls whether custom Manhunt abilities are available during the game.
+#
+ability:
+#
+  # Enables or disables the plugin's ability system.
+  enabled: true
+#
+#
+# ------------------------------------------------------------------------------
+# TEAM
+# ------------------------------------------------------------------------------
+# Prefixes displayed for each Manhunt team.
+#
+# Minecraft color codes can be used with '&'.
+#
+# Examples:
+#   &c = red
+#   &4 = dark red
+#   &a = green
+#   &2 = dark green
+#   &7 = gray
+#   &8 = dark gray
+#   &l = bold
+#
 team:
-  hunter:
+#
+  HUNTER:
     prefix: "&4[Hunter]"
-  runner:
+#
+  RUNNER:
     prefix: "&2[Runner]"
-  spectator:
+#
+  SPECTATOR:
     prefix: "&8[Spectator]"
-
-world:
-  default: "world"
-  lobby: "lobby"
-
+#
+#
+# ------------------------------------------------------------------------------
+# ITEMS
+# ------------------------------------------------------------------------------
+# Configuration for custom Manhunt items.
+#
+item:
+#
+  # Gola item settings.
+  GOLA:
+#
+    # Cooldown between uses of Gola.
+    # Value is measured in seconds.
+    cooldown: 1

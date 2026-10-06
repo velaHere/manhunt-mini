@@ -18,15 +18,21 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
+import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.customItems.CustomItem;
 import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.customItems.CustomRecipe;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public final class Gola implements CustomItem {
 
     public static final Gola INSTANCE;
+    public static final Map<UUID, Long> cooldowns = new HashMap<>();
 
     private final NamespacedKey namespacedKey;
 
@@ -81,6 +87,11 @@ public final class Gola implements CustomItem {
     public void onUse(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
+        Long cooldown = cooldowns.get(player.getUniqueId());
+
+        if(cooldown != null && System.currentTimeMillis() < cooldown) return;
+
+        cooldowns.put(player.getUniqueId(), System.currentTimeMillis() + Settings.config().item().gola().getCooldown() * 1000L);
 
         ManhuntGame currentGame = ManhuntGame.getCurrentGame();
         if(!currentGame.isRunning()) return;

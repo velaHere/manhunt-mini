@@ -224,18 +224,22 @@ public class GameFlowManager {
         }
         resetPlayer(player);
 
-        Location lobby = Settings.getConfigSettings().getLobbySpawn();
+        Location lobby = Settings.config().game().world().getLobbySpawn();
 
         if (lobby == null){
-            World lobbyWorld = Bukkit.getWorld(Settings.getConfigSettings().getLOBBY_WORLD_NAME());
+            World lobbyWorld = Bukkit.getWorld(Settings.config().game().world().getLobbyWorld());
             if (lobbyWorld == null){
                 player.sendMessage(Color.RED + "There is no lobby to teleport to");
                 return;
             }
             player.teleport(lobbyWorld.getSpawnLocation());
             if(player.isOp()){
-                player.sendMessage(Color.RED + "This is not an error(just warning): ");
-                player.sendMessage( Color.RED + "Please set the lobby location(or you will just be teleported to the lobby world's spawn point)");
+                player.sendMessage(" ");
+                player.sendMessage(" ");
+                player.sendMessage(Color.RED + "⚠ " + Color.WHITE + "Lobby spawn is not configured.");
+                player.sendMessage(Color.GRAY + "    Please set the lobby location, or players");
+                player.sendMessage(Color.GRAY + "    will be teleported to the lobby world's spawn point.");
+                player.sendMessage(" ");
             }
             return;
         }
@@ -249,9 +253,9 @@ public class GameFlowManager {
             player.spigot().respawn();
         }
 
-        Location lobby = Settings.getConfigSettings().getLobbySpawn();
+        Location lobby = Settings.config().game().world().getLobbySpawn();
 
-        World lobbyWorld = Bukkit.getWorld(Settings.getConfigSettings().getLOBBY_WORLD_NAME());
+        World lobbyWorld = Bukkit.getWorld(Settings.config().game().world().getLobbyWorld());
         if (lobbyWorld == null){
             player.sendMessage(Color.RED + "There is no lobby to teleport to");
             return;

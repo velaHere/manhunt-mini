@@ -1,12 +1,10 @@
 package org.velas.manhunt.listeners.player.barriers;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.game.ManhuntGame;
@@ -17,11 +15,9 @@ public class PlayerHit implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerHit(EntityDamageByEntityEvent event){
 
-        Location loc = Settings.getConfigSettings().getLobbySpawn();
-        if (loc != null){
-            if (event.getDamager().getLocation().getWorld().getName().equals(loc.getWorld().getName())){
-                event.setCancelled(true);
-            }
+        String lobbyName = Settings.config().game().world().getLobbyWorld();
+        if (event.getDamager().getLocation().getWorld().getName().equals(lobbyName)){
+            event.setCancelled(true);
         }
 
         ManhuntGame currentGame = ManhuntGame.getCurrentGame();

@@ -33,11 +33,16 @@ public class ManhuntCmd extends CustomCommand{
             player.sendMessage(" ");
             player.sendMessage(Color.AQUA + "-------[Manhunt]-------");
             player.sendMessage(Color.AQUA + "/manhunt lobby");
+            player.sendMessage(Color.AQUA + "/manhunt recipe");
+            player.sendMessage(Color.AQUA + "/manhunt recipe <item_name>");
         }else{
             player.sendMessage(" ");
             player.sendMessage(Color.AQUA + "-------[Manhunt]-------");
             player.sendMessage(Color.AQUA + "/manhunt lobby");
             player.sendMessage(Color.AQUA + "/manhunt setlobby");
+            player.sendMessage(Color.AQUA + "/manhunt recipe");
+            player.sendMessage(Color.AQUA + "/manhunt recipe <item_name>");
+            player.sendMessage(Color.AQUA + "/manhunt teams");
             player.sendMessage(Color.AQUA + "/manhunt teams <teamName> <add/remove> <playerName>");
             player.sendMessage(Color.AQUA + "/manhunt match <start/stop> <village> <time(in SEC)> <seed>");
         }

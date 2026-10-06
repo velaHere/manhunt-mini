@@ -161,7 +161,7 @@ public class TrackerManager {
 
             this.setCompassLocation(player, previouslyTracked);
 
-            if (this.calculateDistance(newTrackLocation, previouslyTracked) <= Settings.getConfigSettings().getCOMPASS_RADIUS()){
+            if (this.calculateDistance(newTrackLocation, previouslyTracked) <= Settings.config().game().getCompassRadius()){
                 continue;
             }
 

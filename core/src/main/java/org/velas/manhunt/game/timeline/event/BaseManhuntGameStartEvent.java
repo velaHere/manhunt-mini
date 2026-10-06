@@ -27,7 +27,7 @@ public final class BaseManhuntGameStartEvent extends TimelineEvent {
             GameFlowManager.resetPlayer(p);
 
             if(player.isSpectator()) continue;
-            if(!Settings.getConfigSettings().isALLOW_ABILITIES()) continue;
+            if(!Settings.config().ability().isEnabled()) continue;
 
             p.getInventory().addItem(CustomItemType.create(CustomItemType.AVATAR_SIGIL));
             new ClassSelection(Manhunt.getPlayerMenuUtility(p)).open();

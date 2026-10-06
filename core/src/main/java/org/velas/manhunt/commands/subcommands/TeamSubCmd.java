@@ -40,6 +40,7 @@ public class TeamSubCmd extends CustomSubCommand {
 
         if (team == null){
             player.sendMessage(Color.RED + "This team does not exist.");
+            player.sendMessage(Color.YELLOW + "Select From These -> Hunters, Runners, Spectators (Case Sensitive)");
             return true;
         }
 

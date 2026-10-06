@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.velas.manhunt.Utils;
+import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.player.ManhuntPlayer;
 
@@ -14,8 +15,13 @@ public class PlayerPickup implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPickup(EntityPickupItemEvent event){
 
-        if (!ManhuntGame.getCurrentGame().isRunning()) return;
         if (!(event.getEntity() instanceof Player player)) return;
+
+        if (!Settings.config().game().world().canInteractInLobby(player)){
+            event.setCancelled(true);
+        }
+
+        if (!ManhuntGame.getCurrentGame().isRunning()) return;
 
         ManhuntPlayer manhuntPlayer = ManhuntGame.getCurrentGame().getGameManager().getPlayerManager().getManhuntPlayer(player);
         if (manhuntPlayer == null) {

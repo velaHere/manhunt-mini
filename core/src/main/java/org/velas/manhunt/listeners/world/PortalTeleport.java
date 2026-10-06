@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.velas.manhunt.config.Settings;
-import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
@@ -24,7 +23,7 @@ public class PortalTeleport implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPortal(PlayerPortalEvent event){
 
-        Location loc = Settings.getConfigSettings().getLobbySpawn();
+        Location loc = Settings.config().game().world().getLobbySpawn();
         if (loc != null){
             if (event.getFrom().getWorld().getName().equals(loc.getWorld().getName())){
                 event.setCancelled(true);
@@ -52,7 +51,7 @@ public class PortalTeleport implements Listener {
         }
 
 
-        String levelWorldName = Settings.getConfigSettings().getLEVEL_WORLD_NAME();
+        String levelWorldName = Settings.config().game().world().getDefaultWorld();
 
         World world2 = Bukkit.getWorld(levelWorldName);
         World nether = Bukkit.getWorld(levelWorldName+"_nether");
@@ -92,7 +91,7 @@ public class PortalTeleport implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityPortal(EntityPortalEvent event){
 
-        String levelWorldName = Settings.getConfigSettings().getLEVEL_WORLD_NAME();
+        String levelWorldName = Settings.config().game().world().getDefaultWorld();
 
         World world = Bukkit.getWorld(levelWorldName);
         World nether = Bukkit.getWorld(levelWorldName+"_nether");

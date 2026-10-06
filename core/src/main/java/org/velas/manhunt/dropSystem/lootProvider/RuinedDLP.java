@@ -8,7 +8,6 @@ import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.dropSystem.loot.LootItem;
-import org.velas.manhunt.dropSystem.lootProvider.LootProvider;
 
 import java.util.ArrayList;
 import java.util.List;

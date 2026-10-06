@@ -31,7 +31,7 @@ public class MatchStartCmd extends CustomSubCommand {
             return true;
         }
 
-        Location lobby = Settings.getConfigSettings().getLobbySpawn();
+        Location lobby = Settings.config().game().world().getLobbySpawn();
 
         if (lobby == null){
             player.sendMessage(Color.RED + "Please set manhunt lobby first");

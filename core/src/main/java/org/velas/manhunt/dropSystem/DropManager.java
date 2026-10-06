@@ -57,7 +57,7 @@ public class DropManager {
     public int getNextDropSeconds(){
 
         int currentTime = manhuntManager.getGameTimeLine().getTime();
-        int interval = Settings.getConfigSettings().getDROP_INTERVAL_SEC();
+        int interval = Settings.config().drop().getInterval();
 
         int elapsed = currentTime - dropStartTime;
         int remaining = interval - (elapsed%interval);

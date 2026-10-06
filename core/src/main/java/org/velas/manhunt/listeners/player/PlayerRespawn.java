@@ -20,7 +20,7 @@ public class PlayerRespawn implements Listener {
         Player player = event.getPlayer();
 
         if (!ManhuntGame.getCurrentGame().isRunning()){
-            Location loc = Settings.getConfigSettings().getLobbySpawn();
+            Location loc = Settings.config().game().world().getLobbySpawn();
             if (loc != null){
                 Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> player.teleport(loc), 5L);
             }

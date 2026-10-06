@@ -41,7 +41,7 @@ public abstract class AirDrop {
 
         this.name = name;
         this.world = initialDropLoc.getWorld();
-        this.lifeTime = Settings.getConfigSettings().getDROP_LIFE_TIME() * 1000L; //in milli_seconds
+        this.lifeTime = Settings.config().drop().getLifetime() * 1000L; //in milli_seconds
         this.lootProvider = lootProvider;
         this.playerName = "";
         this.landedAt=0;

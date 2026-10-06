@@ -134,7 +134,9 @@ public final class TrackerCompass implements CustomItem {
         }
         hunter.setTarget(targetCheck);
 
-        player.sendMessage(Color.GREEN + "Switched target to: " + playerManager.getRunners().get(hunter.getTarget()).getPlayer().getName());
+        Player check = playerManager.getRunners().get(hunter.getTarget()).getPlayer();
+        if(check == null) return;
+        player.sendMessage(Color.GREEN + "Switched target to: " + check.getName());
     }
 
     private void checkTarget(PlayerInteractEvent event){

@@ -1,6 +1,7 @@
 package org.velas.manhunt.commands.subcommands;
 
 import org.bukkit.entity.Player;
+import org.velas.manhunt.Color;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.commands.CustomSubCommand;
 import org.velas.manhunt.customItems.CustomRecipe;
@@ -30,6 +31,7 @@ public class RecipeCommand extends CustomSubCommand {
 
     @Override
     public void sendUsage(Player player) {
-
+        player.sendMessage(Color.AQUA + "Usage: /manhunt recipe");
+        player.sendMessage(Color.AQUA + "Usage: /manhunt recipe <item_name>");
     }
 }

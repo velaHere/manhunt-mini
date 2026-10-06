@@ -146,7 +146,7 @@ public abstract class LifecycleHandler {
                 ManhuntPlayer manhuntPlayer = manhuntGame.getGameManager().getPlayerManager().getManhuntPlayer(player);
                 if(manhuntPlayer==null) return;
                 if(manhuntPlayer.isRunner()) {
-                    if(player.getWorld().getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME())) {
+                    if(player.getWorld().getName().equals(Settings.config().game().world().getLobbyWorld())) {
                         player.teleport(manhuntGame.getGameManager().getWorldManager()
                                 .getOverworld().getSpawnLocation());
                     }

@@ -30,6 +30,7 @@ public class MatchSubCmd extends CustomSubCommand {
 
     @Override
     public void sendUsage(Player player) {
-        player.sendMessage(Color.AQUA + "Usage: /manhunt match <start/stop/start_previous> <time(in SEC)>");
+        player.sendMessage(Color.AQUA + "Usage: /manhunt match start <time(in SEC)> <seed>");
+        player.sendMessage(Color.AQUA + "Usage: /manhunt match <stop/start_previous>");
     }
 }

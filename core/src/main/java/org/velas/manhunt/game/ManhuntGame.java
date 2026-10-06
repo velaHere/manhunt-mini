@@ -21,7 +21,7 @@ public final class ManhuntGame {
 
     private ManhuntGame(){
         this.gameState=GameState.LOBBY;
-        this.headStartTime= Settings.getConfigSettings().getHEAD_START_SEC()*20;
+        this.headStartTime= Settings.config().game().getHeadStart()*20L;
     }
 
     private ManhuntGame(int headStartTime){

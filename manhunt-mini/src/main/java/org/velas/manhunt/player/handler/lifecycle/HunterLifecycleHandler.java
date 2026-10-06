@@ -23,8 +23,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
 
-    private static final int DROP_CAP = 5*60; // -> seconds
-    private static final int DROP_RADIUS = 10; // -> blocks
+    private static final int DROP_CAP = Settings.config().drop().respawn().getCooldown(); // -> seconds
+    private static final int DROP_RADIUS = Settings.config().drop().respawn().getRadius(); // -> blocks
     private static final int RESPAWN_TIME_INTERVAL_SECONDS = 10;
 
     private final List<ItemStack> keepContents = new ArrayList<>();
@@ -79,7 +79,7 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
         if (this.hunter.getManhuntGame().getGameState().equals(GameState.STRONGHOLD)) {
             List<ItemStack> drops = event.getDrops();
 
-            double percentage = Math.max(0, Math.min(Settings.getConfigSettings().getKEEP_INVENTORY_PERCENTAGE(), 100));
+            double percentage = Math.max(0, Math.min(Settings.config().game().getKeepInventoryPercentage(), 100));
 
             if (!drops.isEmpty() && percentage > 0) {
                 Collections.shuffle(drops);
@@ -112,7 +112,7 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
             Location bedLoc = player.getBedSpawnLocation();
             return (
                     bedLoc != null &&
-                    Objects.requireNonNull(bedLoc.getWorld()).getName().equals(Settings.getConfigSettings().getLOBBY_WORLD_NAME()))
+                    Objects.requireNonNull(bedLoc.getWorld()).getName().equals(Settings.config().game().world().getLobbyWorld()))
                     ? bedLoc : this.hunter.getManhuntGame().getGameManager().getWorldManager().getOverworld().getSpawnLocation();
         }));
 
@@ -153,6 +153,8 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
             keepContents.forEach(item -> player.getInventory().addItem(item));
             keepContents.clear();
         }
+
+        if(!Settings.config().drop().respawn().isEnabled()) return;
 
         Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
             if(this.hunter.getManhuntGame().getGameManager().getDropManager().hasRespawnDropUnlocked()) {
