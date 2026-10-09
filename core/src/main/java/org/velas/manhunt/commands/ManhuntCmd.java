@@ -11,7 +11,7 @@ public class ManhuntCmd extends CustomCommand{
         super(name, alias, permissionName);
         this.subCommands.add(new LobbySubCmd("lobby", null, null));
         this.subCommands.add(new SetLobbySubCmd("setlobby", null, Settings.SETUP_PERMISSION));
-        this.subCommands.add(new TeamSubCmd("teams", null, Settings.SETUP_PERMISSION));
+        this.subCommands.add(new TeamSubCmd("team", null, Settings.SETUP_PERMISSION));
         this.subCommands.add(new MatchSubCmd("match", null, Settings.SETUP_PERMISSION));
         this.subCommands.add(new RecipeCommand("recipe", null, null));
     }
@@ -42,8 +42,8 @@ public class ManhuntCmd extends CustomCommand{
             player.sendMessage(Color.AQUA + "/manhunt setlobby");
             player.sendMessage(Color.AQUA + "/manhunt recipe");
             player.sendMessage(Color.AQUA + "/manhunt recipe <item_name>");
-            player.sendMessage(Color.AQUA + "/manhunt teams");
-            player.sendMessage(Color.AQUA + "/manhunt teams <teamName> <add/remove> <playerName>");
+            player.sendMessage(Color.AQUA + "/manhunt team");
+            player.sendMessage(Color.AQUA + "/manhunt team <teamName> <add/remove> <playerName>");
             player.sendMessage(Color.AQUA + "/manhunt match <start/stop> <village> <time(in SEC)> <seed>");
         }
     }

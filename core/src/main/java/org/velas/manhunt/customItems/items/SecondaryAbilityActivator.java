@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
 
 public final class SecondaryAbilityActivator implements CustomItem {
 
@@ -28,7 +29,7 @@ public final class SecondaryAbilityActivator implements CustomItem {
     }
 
     private SecondaryAbilityActivator(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "secondary_ability_activator");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.SECONDARY_ABILITY_ACTIVATOR);
     }
 
     @Override

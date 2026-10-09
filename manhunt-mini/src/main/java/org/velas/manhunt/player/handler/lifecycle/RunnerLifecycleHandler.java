@@ -85,4 +85,9 @@ public class RunnerLifecycleHandler extends BaseRunnerLifecycleHandler {
         meta.setColor(org.bukkit.Color.GREEN); // nice green shade
         return meta;
     }
+
+    @Override
+    protected void transition() {
+
+    }
 }

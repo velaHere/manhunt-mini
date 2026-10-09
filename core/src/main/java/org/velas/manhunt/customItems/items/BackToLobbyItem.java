@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.game.GameFlowManager;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
@@ -32,7 +33,7 @@ public final class BackToLobbyItem implements CustomItem {
     }
 
     private BackToLobbyItem() {
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "back_to_lobby");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.BACK_TO_LOBBY);
     }
 
     @Override
@@ -72,16 +73,17 @@ public final class BackToLobbyItem implements CustomItem {
 
     @Override
     public void onItemDrop(PlayerDropItemEvent event) {
+        event.setCancelled(true);
     }
 
     @Override
     public void onPickup(EntityPickupItemEvent event) {
-
+        event.setCancelled(true);
     }
 
     @Override
     public void onItemSwitch(PlayerItemHeldEvent event) {
-
+        event.setCancelled(true);
     }
 
     @Override
@@ -91,6 +93,6 @@ public final class BackToLobbyItem implements CustomItem {
 
     @Override
     public void placeItemToHeldSlot(InventoryClickEvent event) {
-
+        event.setCancelled(true);
     }
 }

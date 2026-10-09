@@ -55,6 +55,11 @@ public abstract class LifecycleHandler {
         this.matchStop();
     }
 
+    protected abstract void transition();
+    public void onTransition() {
+        this.transition();
+    }
+
     protected abstract void playerJoinServer();
     public void onPlayerJoinServer(){
         this.manhuntPlayer.setOnline(true);

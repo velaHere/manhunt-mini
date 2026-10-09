@@ -17,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.menusystem.menu.TeleportMenu;
@@ -33,7 +34,7 @@ public final class SpectatorCompass implements CustomItem {
     }
 
     private SpectatorCompass(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "spectator_compass");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.SPECTATOR_COMPASS);
     }
 
     @Override

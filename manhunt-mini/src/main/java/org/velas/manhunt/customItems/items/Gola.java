@@ -41,7 +41,7 @@ public final class Gola implements CustomItem {
     }
 
     private Gola(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "gola");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.GOLA);
     }
 
     @Override
@@ -87,27 +87,30 @@ public final class Gola implements CustomItem {
     public void onUse(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
+
+        ManhuntGame currentGame = ManhuntGame.getCurrentGame();
+        if(!currentGame.isRunning()) return;
+        if(currentGame.getGameState().equals(GameState.TRANSITION)) return;
+        if(!event.getAction().equals(Action.RIGHT_CLICK_AIR) && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+
         Long cooldown = cooldowns.get(player.getUniqueId());
 
         if(cooldown != null && System.currentTimeMillis() < cooldown) return;
 
         cooldowns.put(player.getUniqueId(), System.currentTimeMillis() + Settings.config().item().gola().getCooldown() * 1000L);
 
-        ManhuntGame currentGame = ManhuntGame.getCurrentGame();
-        if(!currentGame.isRunning()) return;
-        if(currentGame.getGameState().equals(GameState.TRANSITION)) return;
-        if(!event.getAction().equals(Action.RIGHT_CLICK_AIR) && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-        ) return;
-
         ItemStack item = event.getItem();
         if (item == null) return;
 
         if (item.getType() != Material.FIRE_CHARGE) return;
 
-        launchFireball(player);
+        event.setCancelled(true);
+
         if (player.getGameMode() != GameMode.CREATIVE) {
             item.setAmount(item.getAmount() - 1);
         }
+
+        launchFireball(player);
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -40,7 +41,7 @@ public final class FlareGun implements CustomItem {
     }
 
     private FlareGun(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "flare_rocket");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.FLARE_GUN);
     }
 
     @Override
@@ -118,7 +119,8 @@ public final class FlareGun implements CustomItem {
                 ItemFlag.HIDE_UNBREAKABLE,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_PLACED_ON,
-                ItemFlag.HIDE_DYE
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_POTION_EFFECTS
         );
 
         // 🔥 Firework explosion style (THIS controls how it looks when used)
@@ -156,21 +158,31 @@ public final class FlareGun implements CustomItem {
 
     @Override
     public void registerRecipe(JavaPlugin plugin) {
-
         ShapedRecipe recipe = new ShapedRecipe(this.namespacedKey, this.createItem());
+
+        ItemStack rocket = new ItemStack(Material.FIREWORK_ROCKET);
+
+        FireworkMeta meta = (FireworkMeta) rocket.getItemMeta();
+        if(meta == null) return;
+        meta.setPower(1);
+
+        rocket.setItemMeta(meta);
 
         recipe.shape(
                 " G ",
                 "GRG",
                 " G "
         );
-        recipe.setIngredient('G', Material.GOLD_INGOT);
-        recipe.setIngredient('R', Material.FIREWORK_ROCKET);
+        recipe.setIngredient('G', new RecipeChoice.ExactChoice(new ItemStack(Material.GOLD_INGOT)));
+        recipe.setIngredient('R', new RecipeChoice.ExactChoice(rocket));
 
-        CustomRecipe.register(CustomItemType.FLARE_GUN, new CustomRecipe("Flare Gun", this)
-                .shape(new String[]{" G ", "GRG", " G "})
-                .setIngredient('G', new ItemStack(Material.GOLD_INGOT))
-                .setIngredient('R', new ItemStack(Material.FIREWORK_ROCKET)));
+        CustomRecipe.register(
+                CustomItemType.FLARE_GUN,
+                new CustomRecipe("Flare Gun", this)
+                    .shape(new String[]{" G ", "GRG", " G "})
+                    .setIngredient('G', new ItemStack(Material.GOLD_INGOT))
+                    .setIngredient('R', rocket)
+        );
 
         Bukkit.addRecipe(recipe);
     }

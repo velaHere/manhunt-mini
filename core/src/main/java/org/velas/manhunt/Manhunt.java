@@ -50,6 +50,9 @@ public final class Manhunt extends JavaPlugin {
             );
 
         lobby.setDifficulty(Difficulty.PEACEFUL);
+        lobby.setPVP(false);
+        lobby.setAutoSave(true);
+        Settings.config().game().world().reloadLobbySpawn();
 
         try{
             Class<?> clazz = Class.forName("org.velas.manhunt.ClassProviderImpl");

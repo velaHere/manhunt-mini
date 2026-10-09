@@ -81,6 +81,6 @@ public class TeamSubCmd extends CustomSubCommand {
 
     @Override
     public void sendUsage(Player player) {
-        player.sendMessage(Color.AQUA + "Usage: /manhunt teams <teamName> <add/remove> <playerName>");
+        player.sendMessage(Color.AQUA + "Usage: /manhunt team <teamName> <add/remove> <playerName>");
     }
 }

@@ -9,7 +9,7 @@ depend: [Velaboard]
 commands:
   manhunt:
     description: All manhunt configuration Commands
-    usage: "Usage: /manhunt <subcommand> <sub-subcommand> <args>"
+    usage: "Usage: /manhunt"
     aliases: mh
 
   crewmsg:

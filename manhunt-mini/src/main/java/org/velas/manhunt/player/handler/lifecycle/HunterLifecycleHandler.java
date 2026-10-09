@@ -3,16 +3,20 @@ package org.velas.manhunt.player.handler.lifecycle;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.velas.manhunt.Utils;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.dropSystem.drops.RespawnDrop;
+import org.velas.manhunt.game.GameFlowManager;
 import org.velas.manhunt.game.GameState;
+import org.velas.manhunt.game.WorldManager;
 import org.velas.manhunt.player.Hunter;
 
 import java.util.ArrayList;
@@ -43,7 +47,16 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
 
     @Override
     protected void playerJoinServerEvent() {
+
+        Player player = hunter.getPlayer();
+        if(hunter.getManhuntGame().getGameState().equals(GameState.STRONGHOLD) && player!=null)
+            GameFlowManager.stopIntenseVoidEffect(player);
+
         if(!this.hunter.isAlive()) {
+            if(hunter.getManhuntGame().getGameState().equals(GameState.TRANSITION)) {
+                respawnOnTransition();
+                return;
+            }
             createRespawnTimer();
             giveSpectatorEffects();
         }
@@ -56,6 +69,14 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
 
     @Override
     protected void playerRespawnEvent() {
+
+        if(hunter.getManhuntGame().getGameState().equals(GameState.TRANSITION)) {
+            Bukkit.getScheduler().runTaskLater(
+                    Manhunt.getINSTANCE(), this::respawnOnTransition, 1L
+            );
+            return;
+        }
+
         Bukkit.getScheduler().runTaskLater(
                 Manhunt.getINSTANCE(),
                 () -> {
@@ -108,13 +129,14 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
         Player player = this.hunter.getPlayer();
         if(player == null) return;
 
-        player.teleport(Objects.requireNonNullElseGet(player.getLastDeathLocation(), () -> {
-            Location bedLoc = player.getBedSpawnLocation();
-            return (
-                    bedLoc != null &&
-                    Objects.requireNonNull(bedLoc.getWorld()).getName().equals(Settings.config().game().world().getLobbyWorld()))
-                    ? bedLoc : this.hunter.getManhuntGame().getGameManager().getWorldManager().getOverworld().getSpawnLocation();
-        }));
+        Location finalLocation = player.getLastDeathLocation();
+        if(finalLocation == null) finalLocation = player.getBedSpawnLocation();
+
+        if(isInvalidFinalLocation(finalLocation)) {
+            finalLocation = this.hunter.getManhuntGame().getGameManager().getWorldManager().getOverworld().getSpawnLocation();
+        }
+
+        player.teleport(finalLocation);
 
         // something
         player.setInvulnerable(false);
@@ -127,7 +149,54 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
         player.setInvulnerable(true);
     }
 
+    private boolean isInvalidFinalLocation(Location location) {
+        if (location == null || location.getWorld() == null) {
+            return true;
+        }
+
+        World world = location.getWorld();
+
+        if (world.getName().equals(
+                Settings.config().game().world().getLobbyWorld()
+        )) {
+            return true;
+        }
+
+        WorldManager worldManager = hunter.getManhuntGame()
+                .getGameManager()
+                .getWorldManager();
+
+        if (world.getEnvironment() == World.Environment.NETHER) {
+            return !worldManager.getNetherWorld()
+                    .getWorldBorder()
+                    .isInside(location);
+        }
+
+        if (world.getEnvironment() == World.Environment.NORMAL) {
+            return !worldManager.getOverworld()
+                    .getWorldBorder()
+                    .isInside(location);
+        }
+
+        return false;
+    }
+
+    private void respawnOnTransition() {
+
+        Player player = this.hunter.getPlayer();
+        if(player==null) return;
+
+        if(this.hunter.isAlive()) return;
+
+        hunter.setAlive(true);
+
+        removeEffectsAndGiveItems(player);
+    }
+
     private void removeSpectatorEffects() {
+
+        if(this.hunter.isAlive()) return;
+
         Player player = this.hunter.getPlayer();
         if(player == null) return;
         hunter.setAlive(true);
@@ -140,23 +209,14 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
                 )
         );
 
-        player.setInvulnerable(false);
-        player.setInvisible(false);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setFlying(false);
-        player.setAllowFlight(false);
-
-        player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
-
-        this.giveItems(player);
-        if(!keepContents.isEmpty()) {
-            keepContents.forEach(item -> player.getInventory().addItem(item));
-            keepContents.clear();
-        }
+        removeEffectsAndGiveItems(player);
 
         if(!Settings.config().drop().respawn().isEnabled()) return;
 
         Bukkit.getScheduler().runTaskLater(Manhunt.getINSTANCE(), () -> {
+
+            if(!player.getWorld().getName().equals(Settings.OVERWORLD_NAME)) return;
+
             if(this.hunter.getManhuntGame().getGameManager().getDropManager().hasRespawnDropUnlocked()) {
                 long l = System.currentTimeMillis();
                 if ((l - lastRespawnDropMillis) / 1000 > DROP_CAP) {
@@ -178,8 +238,51 @@ public class HunterLifecycleHandler extends BaseHunterLifecycleHandler {
         }, 5L);
     }
 
+    private void removeEffectsAndGiveItems(Player player) {
+        player.setInvulnerable(false);
+        player.setInvisible(false);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setFlying(false);
+        player.setAllowFlight(false);
+
+        player.getInventory().setItem(8, CustomItemType.create(CustomItemType.TRACKER_COMPASS));
+
+        this.giveItems(player);
+        if(!keepContents.isEmpty()) {
+            keepContents.forEach(item -> player.getInventory().addItem(item));
+            keepContents.clear();
+        }
+    }
+
     private void createRespawnTimer() {
         new RespawnTimer().runTaskTimer(Manhunt.getINSTANCE(), 0L, 20L);
+    }
+
+    @Override
+    protected void transition() {
+
+        Utils.warning("Alright, shit");
+
+        Player player = hunter.getPlayer();
+
+        if(player == null) return;
+
+        if(player.isDead()) {
+            Bukkit.getScheduler().runTaskLater(
+                    Manhunt.getINSTANCE(),
+                    () -> player.spigot().respawn(),
+                    1L
+            );
+            return;
+        }
+
+        if(!hunter.isAlive()) {
+            Bukkit.getScheduler().runTaskLater(
+                    Manhunt.getINSTANCE(),
+                    this::respawnOnTransition,
+                    1L
+            );
+        }
     }
 
     private class RespawnTimer extends BukkitRunnable {

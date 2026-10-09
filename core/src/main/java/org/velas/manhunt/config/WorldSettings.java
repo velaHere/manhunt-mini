@@ -81,7 +81,12 @@ public final class WorldSettings {
         Manhunt.getINSTANCE().saveConfig();
     }
 
+    public void reloadLobbySpawn() {
+        this.lobbySpawn = loadLobbySpawn();
+    }
+
     private @Nullable Location loadLobbySpawn() {
+
         World world = Bukkit.getWorld(lobbyWorld);
 
         if (world == null)

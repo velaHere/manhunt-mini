@@ -52,7 +52,7 @@ public class ManhuntManager{
 
     public void onGameStop(){
 
-        this.game.setGameState(org.velas.manhunt.game.GameState.ENDED);
+        this.game.setGameState(GameState.ENDED);
         this.gameTimeLine.stop();
         this.trackerManager.getTracker().stop();
 

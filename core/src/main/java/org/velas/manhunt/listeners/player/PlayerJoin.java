@@ -8,6 +8,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.avatar.AvatarType;
+import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
+import org.velas.manhunt.customItems.CustomRecipe;
 import org.velas.manhunt.game.GameFlowManager;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.game.PlayerManager;
@@ -15,6 +18,8 @@ import org.velas.manhunt.game.scoreboard.ScoreManager;
 import org.velas.manhunt.player.ManhuntPlayer;
 import org.velas.scoreboard.api.Scoreboard;
 import org.velas.scoreboard.api.team.Team;
+
+import java.util.Optional;
 
 public class PlayerJoin implements Listener {
 
@@ -27,6 +32,13 @@ public class PlayerJoin implements Listener {
                 "https://github.com/velaHere/ManhuntPack/releases/download/v1/Manhunt.zip",
                 hexToBytes("5ae45221da9fd625020cd52c80c6379d54f0684c")
         );
+
+        for (String id : CustomRecipe.getRecipeIdList()) {
+            Optional<CustomItem> customItem = CustomItemType.getCustomItem(id);
+            if(customItem.isEmpty()) continue;
+            player.undiscoverRecipe(customItem.get().getKey());
+            player.discoverRecipe(customItem.get().getKey());
+        }
 
         ScoreManager.getScoreboard().addPlayer(player);
 

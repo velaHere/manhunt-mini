@@ -19,7 +19,13 @@ import org.velas.manhunt.player.ManhuntPlayer;
 import org.velas.scoreboard.api.Scoreboard;
 import org.velas.scoreboard.api.team.Team;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public class GameFlowManager {
+
+    private static final Set<UUID> voidEffectPlayers = new HashSet<>();
 
     private final ManhuntManager manager;
     private boolean huntersCanMove;
@@ -320,7 +326,20 @@ public class GameFlowManager {
         });
     }
 
+    public static void stopIntenseVoidEffect(Player player) {
+        if (!voidEffectPlayers.remove(player.getUniqueId())) {
+            return;
+        }
+
+        player.removePotionEffect(PotionEffectType.INVISIBILITY);
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.removePotionEffect(PotionEffectType.DARKNESS);
+        player.removePotionEffect(PotionEffectType.SLOW_FALLING);
+    }
+
     public static void playIntenseVoidEffect(Player player) {
+
+        voidEffectPlayers.add(player.getUniqueId());
 
         Location loc = player.getLocation();
 
@@ -362,7 +381,10 @@ public class GameFlowManager {
             @Override
             public void run() {
 
-                if (ManhuntGame.getCurrentGame().getGameState().equals(GameState.STRONGHOLD)) {
+                if (
+                        ManhuntGame.getCurrentGame().getGameState().equals(GameState.STRONGHOLD) ||
+                        ManhuntGame.getCurrentGame().getGameState().equals(GameState.ENDED)
+                ) {
                     cancel();
                     return;
                 }

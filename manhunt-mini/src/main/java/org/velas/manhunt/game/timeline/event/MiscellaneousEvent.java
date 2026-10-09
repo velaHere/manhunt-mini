@@ -36,7 +36,14 @@ public final class MiscellaneousEvent extends BaseMiscellaneousEvent {
             GameFlowManager.showTransitionTitles(timeElapsedAfterStrongholdRequest-1);
         }
 
-        if (timeElapsedAfterStrongholdRequest == 10) {
+        if(timeElapsedAfterStrongholdRequest == 1) {
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                ManhuntPlayer manhuntPlayer = gameManager.getPlayerManager().getManhuntPlayer(player);
+                if(manhuntPlayer != null)
+                    manhuntPlayer.getHandlerBundle().lifecycleHandler().onTransition();
+            });
+        }
+        else if (timeElapsedAfterStrongholdRequest == 10) {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 GameFlowManager.tpPlayerToLobbyForTransition(player);
                 GameFlowManager.playIntenseVoidEffect(player);

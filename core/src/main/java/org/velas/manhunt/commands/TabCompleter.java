@@ -24,7 +24,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         if (strings.length == 1){
 
             if(commandSender.hasPermission(Settings.SETUP_PERMISSION)){
-                return toSuggest(List.of("match", "teams", "setlobby", "lobby", "recipe"), strings[0]);
+                return toSuggest(List.of("match", "team", "setlobby", "lobby", "recipe"), strings[0]);
             }
             return toSuggest(List.of("lobby"), strings[0]);
         }
@@ -51,7 +51,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                     return toSuggest(new ArrayList<>(CustomRecipe.getRecipeIdList()), strings[1]);
                 }
             }
-            case "teams" -> {
+            case "team" -> {
 
                 if (strings.length == 2) {
 

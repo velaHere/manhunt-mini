@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
 
 
 public final class IronReaver implements CustomItem {
@@ -35,7 +36,7 @@ public final class IronReaver implements CustomItem {
     }
 
     private IronReaver(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "iron_reaver");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.IRON_REAVER);
     }
 
     @Override

@@ -25,12 +25,12 @@ import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.game.ManhuntManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class KeyToConvergence implements CustomItem {
 
     public static final KeyToConvergence INSTANCE;
+    private static final Map<UUID, Long> cooldowns = new HashMap<>();
 
     private final NamespacedKey namespacedKey;
 
@@ -39,7 +39,16 @@ public final class KeyToConvergence implements CustomItem {
     }
 
     private KeyToConvergence(){
-        this.namespacedKey = new NamespacedKey(Manhunt.getINSTANCE(), "key_to_convergence");
+        this.namespacedKey = new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.KEY_TO_CONVERGENCE);
+    }
+
+    public static void setCooldown(UUID playerUUID) {
+        cooldowns.put(playerUUID, System.currentTimeMillis() + 60000);
+    }
+
+    private static int getCooldownSeconds(UUID playerUUID) {
+        if(!cooldowns.containsKey(playerUUID)) return -1;
+        return (int) (cooldowns.get(playerUUID) - System.currentTimeMillis())/1000;
     }
 
     @Override
@@ -110,12 +119,7 @@ public final class KeyToConvergence implements CustomItem {
             return;
         }
 
-        ItemStack item = event.getItem();
-        if(item==null) return;
-        if(!event.getAction().equals(Action.RIGHT_CLICK_AIR) && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-
         Player player = event.getPlayer();
-
         ManhuntGame game = ManhuntGame.getCurrentGame();
 
         if(!game.getGameState().equals(GameState.VILLAGE)){
@@ -126,6 +130,27 @@ public final class KeyToConvergence implements CustomItem {
                 return;
             }
             player.sendMessage(Color.RED + "You cannot use this item right now");
+            return;
+        }
+
+        ItemStack item = event.getItem();
+        if(item==null) return;
+
+        int cooldownSeconds = getCooldownSeconds(player.getUniqueId());
+
+        if(event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            if(cooldownSeconds > 0) {
+                player.sendMessage(ChatColor.YELLOW + "You can use the key in " + cooldownSeconds + "s");
+                return;
+            }
+            player.sendMessage(ChatColor.GREEN + "You can use the key");
+            return;
+        }
+
+        if(!event.getAction().equals(Action.RIGHT_CLICK_AIR) && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+
+        if(cooldownSeconds > 0) {
+            player.sendMessage(ChatColor.YELLOW + "You can use the key in " + cooldownSeconds + "s");
             return;
         }
 

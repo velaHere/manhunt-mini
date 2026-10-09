@@ -18,6 +18,7 @@ import org.velas.manhunt.config.Settings;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.Utils;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.game.ManhuntManager;
@@ -38,7 +39,7 @@ public final class TrackerCompass implements CustomItem {
     }
 
     private TrackerCompass(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "tracker_compass");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.TRACKER_COMPASS);
     }
 
     @Override

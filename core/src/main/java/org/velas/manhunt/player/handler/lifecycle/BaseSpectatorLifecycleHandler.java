@@ -36,6 +36,10 @@ public final class BaseSpectatorLifecycleHandler extends LifecycleHandler {
     }
 
     @Override
+    protected void transition() {
+    }
+
+    @Override
     protected void playerJoinServer() {
         Player player = spectator.getPlayer();
         if(player==null) return;

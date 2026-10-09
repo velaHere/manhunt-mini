@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.velas.manhunt.Manhunt;
 import org.velas.manhunt.customItems.CustomItem;
+import org.velas.manhunt.customItems.CustomItemType;
 import org.velas.manhunt.game.GameState;
 import org.velas.manhunt.game.ManhuntGame;
 import org.velas.manhunt.menusystem.menu.ClassSelection;
@@ -33,7 +34,7 @@ public final class AvatarSigil implements CustomItem {
     }
 
     private AvatarSigil(){
-        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), "avatar_sigil");
+        this.namespacedKey=new NamespacedKey(Manhunt.getINSTANCE(), CustomItemType.AVATAR_SIGIL);
     }
 
     @Override
